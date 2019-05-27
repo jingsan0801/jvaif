@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.1.5.RELEASE</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+    <groupId>com.jsan.jvaif</groupId>
+    <artifactId>parent</artifactId>
+    <version>1.0.0</version>
+    <name>parent</name>
+    <packaging>pom</packaging>
+    <description>my first develop framework project for Spring Boot</description>
+
+    <modules>
+        <module>common</module>
+        <module>inf</module>
+        <module>web</module>
+    </modules>
+
+    <properties>
+        <java.version>11</java.version>
+        <jvaif.common.version>1.0.0</jvaif.common.version>
+        <jvaif.inf.version>1.0.0</jvaif.inf.version>
+        <mysql.version>5.1.37</mysql.version>
+        <fastjson.version>1.2.11</fastjson.version>
+        <servlet-api.version>3.0.1</servlet-api.version>
+        <okhttp.version>3.14.0</okhttp.version>
+        <druid.version>1.1.16</druid.version>
+        <mybatis-plus.version>3.0.7.1</mybatis-plus.version>
+        <lombok.version>1.18.4</lombok.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.jsan.jvaif</groupId>
+                <artifactId>common</artifactId>
+                <version>${jvaif.common.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.jsan.jvaif</groupId>
+                <artifactId>inf</artifactId>
+                <version>${jvaif.inf.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>${mysql.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>fastjson</artifactId>
+                <version>${fastjson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>javax.servlet</groupId>
+                <artifactId>javax.servlet-api</artifactId>
+                <version>${servlet-api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombok.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus</artifactId>
+                <version>${mybatis-plus.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>druid-spring-boot-starter</artifactId>
+                <version>${druid.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.squareup.okhttp3</groupId>
+                <artifactId>okhttp</artifactId>
+                <version>${okhttp.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+        </dependency>
+    </dependencies>
+
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
