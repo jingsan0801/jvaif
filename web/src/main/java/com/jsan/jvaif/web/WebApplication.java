@@ -3,6 +3,10 @@ package com.jsan.jvaif.web;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+/**
+ * web入口
+ * @author jcwang
+ */
 @SpringBootApplication
 public class WebApplication {
 
