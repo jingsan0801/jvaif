@@ -14,7 +14,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         // 将resources下的目录做映射
-        registry.addResourceHandler("/src/**").addResourceLocations("classpath:/src/");
-        registry.addResourceHandler("/start/**").addResourceLocations("classpath:/start/");
+        registry.addResourceHandler("/demo/**").addResourceLocations("classpath:/demo/");
+        registry.addResourceHandler("/admin/**").addResourceLocations("classpath:/admin/");
     }
 }
