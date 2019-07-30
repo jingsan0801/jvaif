@@ -1,9 +1,11 @@
 package com.jsan.jvaif.inf;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.jsan.jvaif.inf.domain.ScyUser;
-import com.jsan.jvaif.inf.mapper.ScyUserMapper;
+import com.jsan.jvaif.inf.service.IScyUserService;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mybatis.spring.annotation.MapperScan;
@@ -12,7 +14,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.annotation.Resource;
-import java.util.List;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -24,16 +25,18 @@ public class InfApplicationTests {
     public void contextLoads() {
     }
 
-    @Resource
-    private ScyUserMapper scyUserMapper;
+    @Autowired
+    private IScyUserService scyUserService;
 
     @Test
-    public void testSelect() {
-        System.out.println(("----- selectAll method test ------"));
-        List<ScyUser> scyUserList = scyUserMapper.selectList(null);
-        Assert.assertEquals(3, scyUserList.size());
-        for(ScyUser scyUser : scyUserList) {
-            log.info("scyUser = {}",scyUser);
-        }
+    public IPage<ScyUser> page() {
+        QueryWrapper<ScyUser> query = new QueryWrapper<ScyUser>();
+        query.ge("id", 1);
+
+        Page<ScyUser> page = new Page<>(1, 2);
+        IPage<ScyUser> rs = scyUserService.page(page);
+
+        log.info("pageRs = {}", rs);
+        return rs;
     }
 }
