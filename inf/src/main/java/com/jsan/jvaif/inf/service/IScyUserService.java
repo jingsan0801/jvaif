@@ -2,7 +2,7 @@ package com.jsan.jvaif.inf.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.jsan.jvaif.inf.domain.ScyUser;
-import com.jsan.jvaif.inf.vo.Result;
+import org.springframework.stereotype.Component;
 
 /**
  * @description: service
@@ -11,9 +11,4 @@ import com.jsan.jvaif.inf.vo.Result;
  **/
 public interface IScyUserService extends IService<ScyUser> {
 
-    /**
-     *
-     * @return Result
-     */
-    Result getListByPage();
 }
