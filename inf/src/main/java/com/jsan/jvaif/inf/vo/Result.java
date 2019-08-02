@@ -1,5 +1,6 @@
 package com.jsan.jvaif.inf.vo;
 
+import com.jsan.jvaif.inf.constant.ResultEnum;
 import lombok.Data;
 
 /**
@@ -15,4 +16,14 @@ public class Result {
     private String msg;
     private Boolean success;
     private Object data;
+
+    public Result() {
+
+    }
+
+    public Result(ResultEnum rs) {
+        this.code = rs.getCode();
+        this.msg = rs.getMsg();
+        this.success = rs.isSuccessFlag();
+    }
 }

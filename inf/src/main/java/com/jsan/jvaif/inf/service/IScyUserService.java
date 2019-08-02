@@ -11,4 +11,10 @@ import org.springframework.stereotype.Component;
  **/
 public interface IScyUserService extends IService<ScyUser> {
 
+    /**
+     * 根据用户名获取用户实体类
+     * @param name 用户名
+     * @return scyUser
+     */
+    ScyUser getScyUserByName(String name);
 }

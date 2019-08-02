@@ -56,4 +56,10 @@ public class ScyUserServiceTest extends InfApplicationTests {
         log.info("list all = {}", rs);
     }
 
+    @Test
+    public void getScyUserByNameTest() {
+        ScyUser scyUser = scyUserService.getScyUserByName("wang");
+        log.info("getScyUserByName : {}",scyUser);
+    }
+
 }

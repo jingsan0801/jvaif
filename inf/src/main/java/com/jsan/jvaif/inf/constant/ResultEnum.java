@@ -9,24 +9,29 @@ public enum ResultEnum {
     /**
      * 参数异常
      */
-    param_null(901,"参数对象为空",false),
+    param_null("901","参数对象为空",false),
 
     /**
      * 必须的工作没做
      */
-    require_sql(902,"查询sql语句为空",false),
+    require_sql("902","查询sql语句为空",false),
+
+    /**
+     * 其他通用异常
+     */
+    db_exception("101","数据库异常",false),
 
     /**
      * 公共
      */
-    pub_fail(0, "提交失败!", false),
-    pub_success(0, "提交成功!", true);
+    pub_fail("0", "提交失败!", false),
+    pub_success("1", "提交成功!", true);
     
-    private int code;
+    private String code;
     private boolean successFlag;
     private String msg;
 
-    public int getCode() {
+    public String getCode() {
         return code;
     }
 
@@ -38,7 +43,7 @@ public enum ResultEnum {
         return msg;
     }
 
-    ResultEnum(int code, String msg, boolean successFlag) {
+    ResultEnum(String code, String msg, boolean successFlag) {
         this.code = code;
         this.msg = msg;
         this.successFlag = successFlag;

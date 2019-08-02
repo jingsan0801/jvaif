@@ -25,11 +25,11 @@ public class ScyUserController {
     @Resource
     private IScyUserService scyUserService;
 
-    @RequestMapping("/{ScyUserId}")
-    public Result getScyUserById(
-        @PathVariable("ScyUserId")
-            String userId) {
-        ScyUser scyUser = scyUserService.getById(userId);
+    @RequestMapping("/{ScyUserName}")
+    public Result getScyUserByName(
+        @PathVariable("ScyUserName")
+            String userName) {
+        ScyUser scyUser = scyUserService.getScyUserByName(userName);
         return ResultUtil.success(scyUser);
     }
 
