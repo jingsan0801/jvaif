@@ -5,9 +5,7 @@ import com.jsan.jvaif.inf.service.IScyUserService;
 import com.jsan.jvaif.inf.util.ResultUtil;
 import com.jsan.jvaif.inf.vo.Result;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
@@ -25,11 +23,29 @@ public class ScyUserController {
     @Resource
     private IScyUserService scyUserService;
 
-    @RequestMapping("/{ScyUserName}")
+    /**
+     * 按userId获取ScyUser
+     * @param userId userId
+     * @return  ScyUser
+     */
+    @RequestMapping(value = "/{ScyUserId}", method = RequestMethod.GET)
+    public Result getScyUserById(
+        @PathVariable("ScyUserId")
+            String userId) {
+        ScyUser scyUser = scyUserService.getById(userId);
+        return ResultUtil.success(scyUser);
+    }
+
+    /**
+     * 按userName获取ScyUser
+     * @param name userName
+     * @return ScyUser
+     */
+    @RequestMapping(value = "",method = RequestMethod.GET)
     public Result getScyUserByName(
-        @PathVariable("ScyUserName")
-            String userName) {
-        ScyUser scyUser = scyUserService.getScyUserByName(userName);
+        @RequestParam("name")
+            String name) {
+        ScyUser scyUser = scyUserService.getScyUserByName(name);
         return ResultUtil.success(scyUser);
     }
 

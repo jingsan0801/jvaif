@@ -57,6 +57,7 @@ public class ResultUtil {
      */
     public static Result success(Object object) {
         Result result = new Result();
+        result.setCode(ResultEnum.pub_success.getCode());
         result.setSuccess(ResultEnum.pub_success.isSuccessFlag());
         result.setMsg(ResultEnum.pub_success.getMsg());
         result.setData(object);
