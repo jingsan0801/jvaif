@@ -4,6 +4,7 @@ import com.jsan.jvaif.inf.domain.ScyUser;
 import com.jsan.jvaif.inf.service.IScyUserService;
 import com.jsan.jvaif.inf.util.ResultUtil;
 import com.jsan.jvaif.inf.vo.Result;
+import com.jsan.jvaif.web.annotation.SkipToken;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,6 +29,7 @@ public class ScyUserController {
      * @param userId userId
      * @return  ScyUser
      */
+    @SkipToken
     @RequestMapping(value = "/{ScyUserId}", method = RequestMethod.GET)
     public Result getScyUserById(
         @PathVariable("ScyUserId")
