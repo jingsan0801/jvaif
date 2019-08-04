@@ -49,4 +49,15 @@ public class ScyUserController {
         return ResultUtil.success(scyUser);
     }
 
+    /**
+     * 新增一个用户
+     * @param userName 用户名
+     * @param password  密码
+     * @return Result
+     */
+    @PostMapping(value = "")
+    public Result addUser(@RequestParam("userName")String userName, @RequestParam("password")String password) {
+        return scyUserService.addUser(userName,password);
+    }
+
 }

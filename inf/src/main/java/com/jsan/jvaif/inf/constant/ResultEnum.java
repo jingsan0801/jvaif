@@ -1,9 +1,12 @@
 package com.jsan.jvaif.inf.constant;
 
+import lombok.Getter;
+
 /**
  * 返回结果描述
  * @author jcwang
  */
+@Getter
 public enum ResultEnum {
 
     /**
@@ -17,31 +20,30 @@ public enum ResultEnum {
     require_sql("902","查询sql语句为空",false),
 
     /**
+     * 身份认证
+     */
+    exception_authentication("903","身份验证失败",false),
+    success_login("1","登录成功",true),
+
+    exception_userName_exists("904","该用户已存在",false),
+
+    /**
      * 其他通用异常
      */
-    db_exception("101","数据库异常",false),
+    exception_db("101","数据库异常",false),
+
 
     /**
      * 公共
      */
     pub_fail("0", "提交失败!", false),
     pub_success("1", "提交成功!", true);
+
     
     private String code;
     private boolean successFlag;
     private String msg;
 
-    public String getCode() {
-        return code;
-    }
-
-    public boolean isSuccessFlag() {
-        return successFlag;
-    }
-
-    public String getMsg() {
-        return msg;
-    }
 
     ResultEnum(String code, String msg, boolean successFlag) {
         this.code = code;

@@ -8,6 +8,7 @@ package com.jsan.jvaif.web.controller;
 
 import com.jsan.jvaif.common.util.CommonUtil;
 import com.jsan.jvaif.inf.constant.ResultEnum;
+import com.jsan.jvaif.inf.exption.BusinessException;
 import com.jsan.jvaif.inf.util.ResultUtil;
 import com.jsan.jvaif.inf.vo.Result;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import javax.naming.AuthenticationException;
 import javax.servlet.http.HttpServletRequest;
 
 @RestControllerAdvice
@@ -24,16 +26,34 @@ import javax.servlet.http.HttpServletRequest;
 public class ExceptionController {
 
     /**
+     * 身份认证异常
+     */
+    @ExceptionHandler(AuthenticationException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public Result handleAuthenticationException(HttpServletRequest request, Throwable ex) {
+        log.error(CommonUtil.getStackTraceInfoOfException(ex));
+        return ResultUtil.fail(ResultEnum.exception_authentication, ex.getMessage());
+
+    }
+
+    /**
+     * 系统自定义异常
+     */
+    @ExceptionHandler(BusinessException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public Result handleBusinessException(HttpServletRequest request, Throwable ex) {
+        log.error(CommonUtil.getStackTraceInfoOfException(ex));
+        return ResultUtil.fail(ResultEnum.exception_userName_exists, ((BusinessException)ex).getAdditionForJson());
+    }
+
+    /**
      * 数据库异常
-     *
-     * @return Result
      */
     @ExceptionHandler(MyBatisSystemException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public Result handlerDbException(HttpServletRequest request, Throwable ex) {
+    public Result handleDbException(HttpServletRequest request, Throwable ex) {
         log.error(CommonUtil.getStackTraceInfoOfException(ex));
-        return ResultUtil.fail(ResultEnum.db_exception.getCode(), ResultEnum.db_exception.getMsg(),
-            CommonUtil.getStackTraceInfoOfException(ex));
+        return ResultUtil.fail(ResultEnum.exception_db, CommonUtil.getStackTraceInfoOfException(ex));
     }
 
     /**
@@ -47,7 +67,8 @@ public class ExceptionController {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Result globalException(HttpServletRequest request, Throwable ex) {
         log.error(CommonUtil.getStackTraceInfoOfException(ex));
-        return ResultUtil.fail(String.valueOf(this.getHttpStatus(request).value()), ex.getMessage(), null);
+        return ResultUtil.fail(String.valueOf(this.getHttpStatus(request).value()), ex.getMessage(),
+            CommonUtil.getStackTraceInfoOfException(ex));
     }
 
     /**

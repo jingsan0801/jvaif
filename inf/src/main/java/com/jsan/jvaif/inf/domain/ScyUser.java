@@ -18,5 +18,7 @@ public class ScyUser {
     private long id;
     private String name;
     private String password;
+    private String salt;
+    private int status;
 
 }
