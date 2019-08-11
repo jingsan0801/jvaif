@@ -18,8 +18,8 @@ public class JsonUtil {
      * @param map 待转换map
      * @return map的JSONObject形式
      */
-    public static JSONObject mapToJsonObject(Map<String,Object> map){
-        if(MapUtils.isEmpty(map)){
+    public static JSONObject mapToJsonObject(Map<String, Object> map) {
+        if (MapUtils.isEmpty(map)) {
             return null;
         }
         JSONObject json = new JSONObject(map.size());

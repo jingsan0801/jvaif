@@ -1,6 +1,5 @@
 package com.jsan.jvaif.inf.service;
 
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.jsan.jvaif.inf.InfApplicationTests;
@@ -12,8 +11,6 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.List;
 
 /**
  * @description:
@@ -28,12 +25,12 @@ public class ScyUserServiceTest extends InfApplicationTests {
     @Autowired
     private IScyUserService scyUserService;
 
-    //@Test
+    @Test
     public void addUser() {
         String userName = "wangjc0801";
-        String password = "111111";
+        String password = "wangjc0801";
 
-        Result rs = scyUserService.addUser(userName,password);
+        Result rs = scyUserService.addUser(userName, password);
         log.info("addUser rs = {}", rs);
         selectByUserName(userName);
     }
@@ -45,7 +42,7 @@ public class ScyUserServiceTest extends InfApplicationTests {
         updateWrapper.eq("id", id);
 
         ScyUser scyUser = new ScyUser();
-        scyUser.setName("jing");
+        scyUser.setUserName("jing");
         scyUser.setPassword("123");
 
         log.info("before update :{}", scyUserService.getById(id));
@@ -54,26 +51,26 @@ public class ScyUserServiceTest extends InfApplicationTests {
     }
 
     public void selectByUserName(String userName) {
-        ScyUser rs = scyUserService.getOne(new QueryWrapper<ScyUser>().eq("name",userName));
-        log.info("{} : {}",userName,rs);
+        ScyUser rs = scyUserService.getOne(new QueryWrapper<ScyUser>().eq("user_name", userName));
+        log.info("{} : {}", userName, rs);
     }
 
     //@Test
     public void getScyUserByNameTest() {
         ScyUser scyUser = scyUserService.getScyUserByName("wang");
-        log.info("getScyUserByName : {}",scyUser);
+        log.info("getScyUserByName : {}", scyUser);
     }
 
     @Test
     public void encodePasswordTest() {
         String userName = "wangjc0801";
         String password = "111111";
-        ScyUser queryRs = scyUserService.getOne(new QueryWrapper<ScyUser>().eq("name",userName));
+        ScyUser queryRs = scyUserService.getOne(new QueryWrapper<ScyUser>().eq("user_name", userName));
         String salt = queryRs.getSalt();
-        String rs = scyUserService.shiroMd5(password,userName,salt);
-        log.info("encode password = {}",rs);
+        String rs = scyUserService.shiroMd5(password, userName, salt);
+        log.info("encode password = {}", rs);
 
-        Assert.assertEquals(rs,queryRs.getPassword());
+        Assert.assertEquals(rs, queryRs.getPassword());
     }
 
 }

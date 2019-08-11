@@ -29,9 +29,9 @@ public class ExceptionController {
      * 身份认证异常
      */
     @ExceptionHandler(AuthenticationException.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public Result handleAuthenticationException(HttpServletRequest request, Throwable ex) {
-        log.error(CommonUtil.getStackTraceInfoOfException(ex));
+        log.info(CommonUtil.getStackTraceInfoOfException(ex));
         return ResultUtil.fail(ResultEnum.exception_authentication, ex.getMessage());
 
     }
@@ -42,7 +42,7 @@ public class ExceptionController {
     @ExceptionHandler(BusinessException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public Result handleBusinessException(HttpServletRequest request, Throwable ex) {
-        log.error(CommonUtil.getStackTraceInfoOfException(ex));
+        log.info(CommonUtil.getStackTraceInfoOfException(ex));
         return ResultUtil.fail(ResultEnum.exception_userName_exists, ((BusinessException)ex).getAdditionForJson());
     }
 

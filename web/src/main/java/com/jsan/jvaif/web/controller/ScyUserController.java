@@ -26,8 +26,9 @@ public class ScyUserController {
 
     /**
      * 按userId获取ScyUser
+     *
      * @param userId userId
-     * @return  ScyUser
+     * @return ScyUser
      */
     @SkipToken
     @RequestMapping(value = "/{ScyUserId}", method = RequestMethod.GET)
@@ -40,10 +41,11 @@ public class ScyUserController {
 
     /**
      * 按userName获取ScyUser
+     *
      * @param name userName
      * @return ScyUser
      */
-    @RequestMapping(value = "",method = RequestMethod.GET)
+    @RequestMapping(value = "", method = RequestMethod.GET)
     public Result getScyUserByName(
         @RequestParam("name")
             String name) {
@@ -53,13 +55,18 @@ public class ScyUserController {
 
     /**
      * 新增一个用户
+     *
      * @param userName 用户名
-     * @param password  密码
+     * @param password 密码
      * @return Result
      */
     @PostMapping(value = "")
-    public Result addUser(@RequestParam("userName")String userName, @RequestParam("password")String password) {
-        return scyUserService.addUser(userName,password);
+    public Result addUser(
+        @RequestParam("userName")
+            String userName,
+        @RequestParam("password")
+            String password) {
+        return scyUserService.addUser(userName, password);
     }
 
 }

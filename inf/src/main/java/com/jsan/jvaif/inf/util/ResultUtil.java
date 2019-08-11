@@ -37,6 +37,14 @@ public class ResultUtil {
      * @param rsEnum 指定的resultEnum
      * @return 失败Result
      */
+    public static Result fail(ResultEnum rsEnum) {
+        return fail(rsEnum, null);
+    }
+
+    /**
+     * @param rsEnum 指定的resultEnum
+     * @return 失败Result
+     */
     public static Result fail(ResultEnum rsEnum, Object data) {
         Result rs = new Result(rsEnum);
         rs.setData(data);

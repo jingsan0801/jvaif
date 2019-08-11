@@ -28,12 +28,16 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         // 将resources下的目录做映射
-        registry.addResourceHandler("/admin/**").addResourceLocations("classpath:/admin/");
+        // swagger
+        registry.addResourceHandler("swagger-ui.html").addResourceLocations("classpath:/META-INF/resources/");
+        registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
+
     }
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(getLoginInterceptor()).addPathPatterns("/**").excludePathPatterns("/error")
-            .excludePathPatterns("/auth/**");
+            .excludePathPatterns("/swagger-resources/**", "/webjars/**", "/v2/**", "/swagger-ui.html/**");
     }
+
 }

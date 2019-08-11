@@ -1,15 +1,11 @@
 package com.jsan.jvaif.inf.domain.shiro;
 
-import com.jsan.jvaif.inf.domain.ScyUser;
 import com.jsan.jvaif.inf.service.IScyUserService;
-import com.jsan.jvaif.inf.util.JwtUtil;
-import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.authc.AuthenticationInfo;
-import org.apache.shiro.authc.AuthenticationToken;
-import org.apache.shiro.authc.SimpleAuthenticationInfo;
+import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 
@@ -25,15 +21,15 @@ public class ShiroRealm extends AuthorizingRealm {
 
     /**
      * @param token token
-     * @return  是否是jwtToken
+     * @return 是否是指定类型
      */
     @Override
     public boolean supports(AuthenticationToken token) {
-        return token instanceof JwtToken;
+        return token instanceof UsernamePasswordToken;
     }
 
     /**
-     此方法调用hasRole,hasPermission的时候才会进行回调.
+     * 此方法调用hasRole,hasPermission的时候才会进行回调.
      * 权限信息.(授权):
      * 1、如果用户正常退出，缓存自动清空；
      * 2、如果用户非正常退出，缓存自动清空；
@@ -51,8 +47,8 @@ public class ShiroRealm extends AuthorizingRealm {
     }
 
     /**
-     * 认证信息(身份验证)
-     * Authentication 是用来验证用户身份
+     * 身份验证
+     * Authentication 是用来验证用户身份，subject.login()触发
      *
      * @param authenticationToken authenticationToken
      * @return AuthenticationInfo
@@ -61,21 +57,19 @@ public class ShiroRealm extends AuthorizingRealm {
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken)
         throws AuthenticationException {
-        String token = (String)authenticationToken.getCredentials();
+        String userName = (String)authenticationToken.getPrincipal();
+        String password = new String((char[])authenticationToken.getCredentials());
 
-        String userName = JwtUtil.getUserName(token);
-        if(userName == null) {
-            throw new AuthenticationException("token 无效 : [" + token + "]");
+        if (userName == null || StringUtils.isEmpty(password)) {
+            throw new AuthenticationException("token 无效 : [" + authenticationToken + "]");
         }
 
-        ScyUser scyUser = scyUserService.getScyUserByName(userName);
-        if(scyUser == null) {
-            throw new AuthenticationException("该用户不存在 : [" + userName + "]");
-        }
+        String token = scyUserService.login(userName, password);
 
-        if(!JwtUtil.verify(token,userName,scyUser.getPassword())) {
+        if (!StringUtils.isEmpty(token)) {
+            return new SimpleAuthenticationInfo(token, password, getName());
+        } else {
             throw new AuthenticationException("用户名或密码错误 : [" + userName + "]");
         }
-        return new SimpleAuthenticationInfo(token,token,"shiroRealm");
     }
 }

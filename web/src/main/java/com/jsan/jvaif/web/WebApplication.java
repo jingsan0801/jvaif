@@ -7,6 +7,7 @@ import org.springframework.context.annotation.ComponentScan;
 
 /**
  * web入口
+ *
  * @author jcwang
  */
 @SpringBootApplication

@@ -14,7 +14,7 @@ public class Result {
 
     private String code;
     private String msg;
-    private Boolean success;
+    private boolean success;
     private Object data;
 
     public Result() {

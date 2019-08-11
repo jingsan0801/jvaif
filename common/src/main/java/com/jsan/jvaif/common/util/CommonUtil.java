@@ -1,7 +1,5 @@
 package com.jsan.jvaif.common.util;
 
-import lombok.extern.slf4j.Slf4j;
-
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
@@ -14,6 +12,7 @@ import java.io.StringWriter;
 public class CommonUtil {
     /**
      * 获取异常堆栈信息
+     *
      * @param ex 异常类
      * @return 异常堆栈信息
      */

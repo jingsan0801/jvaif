@@ -15,7 +15,7 @@ public class MathUtil {
      * @return 随机字符串
      */
     public static String getRandomString(int length) {
-        String base = "abcdefghijklmnopqrstuvwxyz0123456789" ;
+        String base = "abcdefghijklmnopqrstuvwxyz0123456789";
         Random random = new Random();
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < length; i++) {
