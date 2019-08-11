@@ -1,0 +1,112 @@
+package com.jsan.jvaif.inf.service;
+
+import com.alibaba.fastjson.JSON;
+import lombok.Data;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.redis.core.*;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.util.concurrent.TimeUnit;
+
+@Service
+@Data
+public class RedisService {
+    @Resource
+    @Qualifier("redisTemplate")
+    private RedisTemplate<String, Object> redisTemplate;
+    @Resource
+    private ValueOperations<String, String> valueOperations;
+    @Resource
+    private HashOperations<String, String, Object> hashOperations;
+    @Resource
+    private ListOperations<String, Object> listOperations;
+    @Resource
+    private SetOperations<String, Object> setOperations;
+    @Resource
+    private ZSetOperations<String, Object> zSetOperations;
+    /**
+     * 默认过期时长，单位：秒
+     */
+    public final static long DEFAULT_EXPIRE = 60 * 60 * 24;
+    /**
+     * 不设置过期时长
+     */
+    public final static long NOT_EXPIRE = -1;
+    private int intervalTime = 5 * 60;
+
+    public void set(String key, Object value, long expire) {
+        valueOperations.set(key, toJson(value));
+        if (expire != NOT_EXPIRE) {
+            redisTemplate.expire(key, expire, TimeUnit.SECONDS);
+        }
+    }
+
+    public void set(String key, Object value) {
+        set(key, value, DEFAULT_EXPIRE);
+    }
+
+    public <T> T get(String key, Class<T> clazz, long expire) {
+        String value = valueOperations.get(key);
+        if (expire != NOT_EXPIRE) {
+            redisTemplate.expire(key, expire, TimeUnit.SECONDS);
+        }
+        return value == null ? null : fromJson(value, clazz);
+    }
+
+    public <T> T get(String key, Class<T> clazz) {
+        return get(key, clazz, NOT_EXPIRE);
+    }
+
+    public String get(String key, long expire) {
+        String value = valueOperations.get(key);
+        if (expire != NOT_EXPIRE) {
+            redisTemplate.expire(key, expire, TimeUnit.SECONDS);
+        }
+        return value;
+    }
+
+    public String get(String key) {
+        return get(key, NOT_EXPIRE);
+    }
+
+    public void delete(String key) {
+        redisTemplate.delete(key);
+
+    }
+
+    /***
+     * 判断是否在当前时间+internalTime是否过期
+     * @param key redis key
+     * @param internalTime 过期
+     * @return
+     */
+    public Boolean isExpire(String key, long internalTime) {
+        //剩余时间(秒为单位)
+        long expireDate = redisTemplate.boundValueOps(key).getExpire();
+        return expireDate < internalTime;
+    }
+
+    public Boolean isExpireDefaultTime(String key) {
+        return isExpire(key, intervalTime);
+    }
+
+    /**
+     * Object转成JSON数据
+     */
+    private String toJson(Object object) {
+        if (object instanceof Integer || object instanceof Long || object instanceof Float || object instanceof Double
+            || object instanceof Boolean || object instanceof String) {
+            return String.valueOf(object);
+        }
+        return JSON.toJSONString(object);
+    }
+
+    /**
+     * JSON数据，转成Object
+     */
+    private <T> T fromJson(String json, Class<T> clazz) {
+        return JSON.parseObject(json, clazz);
+    }
+}
