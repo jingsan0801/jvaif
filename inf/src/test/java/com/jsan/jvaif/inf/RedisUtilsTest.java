@@ -21,5 +21,4 @@ public class RedisUtilsTest extends InfApplicationTests {
         redisService.set("javif_token_wangjc0801", 123);
         log.info(redisService.get("javif_token_wangjc0801"));
     }
-
 }
