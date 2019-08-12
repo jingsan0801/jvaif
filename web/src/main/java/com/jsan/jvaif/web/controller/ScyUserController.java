@@ -45,7 +45,7 @@ public class ScyUserController {
      * @param name userName
      * @return ScyUser
      */
-    @RequestMapping(value = "", method = RequestMethod.GET)
+    @GetMapping(value = "")
     public Result getScyUserByName(
         @RequestParam("name")
             String name) {

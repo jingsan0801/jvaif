@@ -2,12 +2,16 @@ package com.jsan.jvaif.web.config;
 
 import com.jsan.jvaif.web.interceptor.LoginInterceptor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import java.util.List;
 
 /**
  * @description: 配置web资源映射
@@ -15,9 +19,12 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  * @create: 2019-07-30 16:03
  **/
 @Configuration
-@PropertySource("classpath:sys.config.properties")
+@PropertySource("classpath:config/pathConfig.properties")
 @Slf4j
 public class WebMvcConfig implements WebMvcConfigurer {
+
+    @Value("#{'${static.urls}'.split(',')}")
+    private List<String> staticUrls;
 
     @Bean
     public LoginInterceptor getLoginInterceptor() {
@@ -36,8 +43,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(getLoginInterceptor()).addPathPatterns("/**").excludePathPatterns("/error")
-            .excludePathPatterns("/swagger-resources/**", "/webjars/**", "/v2/**", "/swagger-ui.html/**");
+        InterceptorRegistration interceptorRegistration =
+            registry.addInterceptor(getLoginInterceptor()).addPathPatterns("/**");
+        interceptorRegistration.excludePathPatterns(staticUrls);
     }
 
 }

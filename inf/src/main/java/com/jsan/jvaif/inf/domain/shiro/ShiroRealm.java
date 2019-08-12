@@ -1,13 +1,20 @@
 package com.jsan.jvaif.inf.domain.shiro;
 
+import com.jsan.jvaif.inf.domain.JwtToken;
+import com.jsan.jvaif.inf.exption.BusinessException;
 import com.jsan.jvaif.inf.service.IScyUserService;
-import org.apache.shiro.authc.*;
+import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.AuthenticationInfo;
+import org.apache.shiro.authc.AuthenticationToken;
+import org.apache.shiro.authc.SimpleAuthenticationInfo;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
+
+import static com.jsan.jvaif.inf.constant.ResultEnum.exception_token_required;
 
 /**
  * @description: shiro使用的Realm
@@ -25,7 +32,7 @@ public class ShiroRealm extends AuthorizingRealm {
      */
     @Override
     public boolean supports(AuthenticationToken token) {
-        return token instanceof UsernamePasswordToken;
+        return token instanceof JwtToken;
     }
 
     /**
@@ -57,19 +64,14 @@ public class ShiroRealm extends AuthorizingRealm {
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken)
         throws AuthenticationException {
-        String userName = (String)authenticationToken.getPrincipal();
-        String password = new String((char[])authenticationToken.getCredentials());
+        String authToken = (String)authenticationToken.getPrincipal();
 
-        if (userName == null || StringUtils.isEmpty(password)) {
-            throw new AuthenticationException("token 无效 : [" + authenticationToken + "]");
+        if (StringUtils.isEmpty(authToken)) {
+            throw new BusinessException(exception_token_required);
         }
 
-        String token = scyUserService.login(userName, password);
-
-        if (!StringUtils.isEmpty(token)) {
-            return new SimpleAuthenticationInfo(token, password, getName());
-        } else {
-            throw new AuthenticationException("用户名或密码错误 : [" + userName + "]");
-        }
+        scyUserService.checkToken(authToken);
+        return new SimpleAuthenticationInfo(authToken, authToken, getName());
     }
+
 }

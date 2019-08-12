@@ -32,7 +32,7 @@ public class ExceptionController {
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public Result handleAuthenticationException(HttpServletRequest request, Throwable ex) {
         log.info(CommonUtil.getStackTraceInfoOfException(ex));
-        return ResultUtil.fail(ResultEnum.exception_authentication, ex.getMessage());
+        return ResultUtil.fail(ResultEnum.exception_token_check_fail, ex.getMessage());
 
     }
 
@@ -42,8 +42,9 @@ public class ExceptionController {
     @ExceptionHandler(BusinessException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public Result handleBusinessException(HttpServletRequest request, Throwable ex) {
+        BusinessException bex = (BusinessException)ex;
         log.info(CommonUtil.getStackTraceInfoOfException(ex));
-        return ResultUtil.fail(ResultEnum.exception_userName_exists, ((BusinessException)ex).getAdditionForJson());
+        return ResultUtil.fail(bex.getResultEnum(),bex.getAdditionForJson());
     }
 
     /**

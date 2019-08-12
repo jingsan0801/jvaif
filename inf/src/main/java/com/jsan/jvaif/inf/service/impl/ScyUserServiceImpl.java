@@ -20,6 +20,8 @@ import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 
+import static com.jsan.jvaif.inf.constant.ResultEnum.*;
+
 /**
  * @description:
  * @author: jcwang
@@ -55,7 +57,7 @@ public class ScyUserServiceImpl extends ServiceImpl<ScyUserMapper, ScyUser> impl
         ScyUser queryRs =
             scyUserMapper.selectOne(new QueryWrapper<ScyUser>().eq("user_name", userName).eq("status", 1));
         if (queryRs != null) {
-            throw new BusinessException(ResultEnum.exception_userName_exists, userName);
+            throw new BusinessException(ResultEnum.exception_user_exists, userName);
         }
         ScyUser scyUser = new ScyUser();
         scyUser.setUserName(userName);
@@ -106,7 +108,7 @@ public class ScyUserServiceImpl extends ServiceImpl<ScyUserMapper, ScyUser> impl
     public ScyUser checkUsernameAndPassword(String userName, String password) {
         ScyUser scyUser = getScyUserByName(userName);
         if (scyUser == null) {
-            throw new AuthenticationException(ResultEnum.exception_userName_notExists.getMsg());
+            throw new AuthenticationException(ResultEnum.exception_user_notExists.getMsg());
         }
         String salt = scyUser.getSalt();
         // 计算密码
@@ -141,24 +143,24 @@ public class ScyUserServiceImpl extends ServiceImpl<ScyUserMapper, ScyUser> impl
     @Override
     public boolean checkToken(String token) {
         if (StringUtils.isEmpty(token)) {
-            throw new AuthenticationException("token is required");
+            throw new BusinessException(exception_token_required);
         }
 
-        String userName = JwtUtil.getUserName(token);
+        String userName = JwtUtil.getClaim(token);
         if (StringUtils.isEmpty(userName)) {
-            log.info("解析token失败:{}", token);
-            throw new AuthenticationException("解析token失败");
+            throw new BusinessException(exception_token_decode_fail);
         }
 
         // 验证token有效性
         ScyUser scyUser = getScyUserByName(userName);
+        if (scyUser == null) {
+            throw new BusinessException(exception_user_notExists);
+        }
         if (!checkUserStatus(scyUser)) {
-            log.info("该用户不存在或状态不正常:{}", scyUser);
-            throw new AuthenticationException("该用户不存在或状态不正常");
+            throw new BusinessException(exception_user_invalid);
         }
         if (!JwtUtil.verify(token, scyUser.getUserName(), scyUser.getPassword())) {
-            log.error("token[{}]无效: {}", token, scyUser);
-            throw new AuthenticationException("token无效");
+            throw new BusinessException(exception_token_illegal);
         }
         return true;
     }
@@ -172,7 +174,7 @@ public class ScyUserServiceImpl extends ServiceImpl<ScyUserMapper, ScyUser> impl
     @Override
     public String refreshToken(String token) {
         if (checkToken(token)) {
-            String userName = JwtUtil.getUserName(token);
+            String userName = JwtUtil.getClaim(token);
             ScyUser scyUser = getScyUserByName(userName);
             if (checkUserStatus(scyUser)) {
                 //TODO: 旧的token不会失效
@@ -180,5 +182,8 @@ public class ScyUserServiceImpl extends ServiceImpl<ScyUserMapper, ScyUser> impl
             }
         }
         return null;
+    }
+
+    void invalidToken(String userName, String token) {
     }
 }

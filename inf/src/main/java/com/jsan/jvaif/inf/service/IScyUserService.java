@@ -11,6 +11,7 @@ public interface IScyUserService extends IService<ScyUser> {
 
     /**
      * 登录, 返回token
+     *
      * @param userName 用户名
      * @param password 密码
      * @return Result
@@ -19,6 +20,7 @@ public interface IScyUserService extends IService<ScyUser> {
 
     /**
      * 判断用户名密码是否匹配
+     *
      * @param userName 用户名
      * @param password 密码
      * @return ScyUser
@@ -63,6 +65,7 @@ public interface IScyUserService extends IService<ScyUser> {
 
     /**
      * 判断token是否有效
+     *
      * @param token token
      * @return token是否有效
      */
@@ -70,8 +73,10 @@ public interface IScyUserService extends IService<ScyUser> {
 
     /**
      * 更新token
+     *
      * @param token token
      * @return 新的token
      */
     String refreshToken(String token);
+
 }
