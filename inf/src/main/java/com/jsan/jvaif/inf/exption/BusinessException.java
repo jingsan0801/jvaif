@@ -18,6 +18,7 @@ public class BusinessException extends RuntimeException {
     /**
      * 用于定位异常的附带信息
      */
+    @Getter
     private Object addition;
 
     /**
@@ -33,6 +34,7 @@ public class BusinessException extends RuntimeException {
 
     public BusinessException(ResultEnum resultEnum, Object data) {
         super(resultEnum.getMsg());
+        this.resultEnum = resultEnum;
         this.addition = data;
     }
 

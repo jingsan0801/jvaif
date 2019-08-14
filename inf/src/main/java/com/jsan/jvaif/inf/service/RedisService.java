@@ -4,12 +4,16 @@ import com.alibaba.fastjson.JSON;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.*;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Redis service
+ *
+ * @author jcwang
+ */
 @Service
 @Data
 public class RedisService {
@@ -34,7 +38,6 @@ public class RedisService {
      * 不设置过期时长
      */
     public final static long NOT_EXPIRE = -1;
-    private int intervalTime = 5 * 60;
 
     public void set(String key, Object value, long expire) {
         valueOperations.set(key, toJson(value));
@@ -86,10 +89,6 @@ public class RedisService {
         //剩余时间(秒为单位)
         long expireDate = redisTemplate.boundValueOps(key).getExpire();
         return expireDate < internalTime;
-    }
-
-    public Boolean isExpireDefaultTime(String key) {
-        return isExpire(key, intervalTime);
     }
 
     /**

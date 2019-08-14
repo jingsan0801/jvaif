@@ -8,6 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.Date;
 
+import static com.jsan.jvaif.inf.constant.PublicConstant.TOKEN_EXPIRE_TIME;
+
 /**
  * @description: jwt工具类
  * @author: jcwang
@@ -19,7 +21,6 @@ public class JwtUtil {
     /**
      * 过期时间
      */
-    private static final long EXPIRE_TIME = 10 * 60 * 1000;
 
     private static final String CLAIM = "userName";
 
@@ -62,12 +63,12 @@ public class JwtUtil {
      * 生成token
      *
      * @param userName 待加密的userName
-     * @param secret   待加密的password
+     * @param secret   加密后的用户password
      * @return jwt使用的token
      */
     public static String sign(String userName, String secret) {
         try {
-            Date expiresDate = new Date(System.currentTimeMillis() + EXPIRE_TIME);
+            Date expiresDate = new Date(System.currentTimeMillis() + TOKEN_EXPIRE_TIME);
             Algorithm algorithm = Algorithm.HMAC256(secret);
             return JWT.create().withClaim(CLAIM, userName).withExpiresAt(expiresDate).sign(algorithm);
         } catch (Exception e) {

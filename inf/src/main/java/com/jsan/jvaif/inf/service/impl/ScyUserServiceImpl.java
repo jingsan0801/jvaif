@@ -9,6 +9,7 @@ import com.jsan.jvaif.inf.domain.ScyUser;
 import com.jsan.jvaif.inf.exption.BusinessException;
 import com.jsan.jvaif.inf.mapper.ScyUserMapper;
 import com.jsan.jvaif.inf.service.IScyUserService;
+import com.jsan.jvaif.inf.service.ITokenService;
 import com.jsan.jvaif.inf.util.JwtUtil;
 import com.jsan.jvaif.inf.util.ResultUtil;
 import com.jsan.jvaif.inf.vo.Result;
@@ -33,6 +34,9 @@ public class ScyUserServiceImpl extends ServiceImpl<ScyUserMapper, ScyUser> impl
 
     @Resource
     private ScyUserMapper scyUserMapper;
+
+    @Resource(name = "authTokenServiceImpl")
+    private ITokenService tokenService;
 
     /**
      * 根据用户名获取用户实体类
@@ -129,7 +133,7 @@ public class ScyUserServiceImpl extends ServiceImpl<ScyUserMapper, ScyUser> impl
     public String login(String userName, String password) {
         ScyUser scyUser = checkUsernameAndPassword(userName, password);
         if (scyUser != null) {
-            return JwtUtil.sign(userName, scyUser.getPassword());
+            return tokenService.genToken(userName, scyUser.getPassword());
         }
         return null;
     }
@@ -151,6 +155,15 @@ public class ScyUserServiceImpl extends ServiceImpl<ScyUserMapper, ScyUser> impl
             throw new BusinessException(exception_token_decode_fail);
         }
 
+        // 从Redis中获取token
+        String tokenFromRedis = tokenService.getToken(userName);
+        if (!StringUtils.isEmpty(tokenFromRedis)) {
+            if (!token.equals(tokenService.getToken(userName))) {
+                throw new BusinessException(exception_token_illegal);
+            }
+        }
+
+        // 如果redis中由于某种原因没有保存token, 则重新验证
         // 验证token有效性
         ScyUser scyUser = getScyUserByName(userName);
         if (scyUser == null) {
@@ -173,17 +186,12 @@ public class ScyUserServiceImpl extends ServiceImpl<ScyUserMapper, ScyUser> impl
      */
     @Override
     public String refreshToken(String token) {
-        if (checkToken(token)) {
-            String userName = JwtUtil.getClaim(token);
-            ScyUser scyUser = getScyUserByName(userName);
-            if (checkUserStatus(scyUser)) {
-                //TODO: 旧的token不会失效
-                return JwtUtil.sign(userName, scyUser.getPassword());
-            }
+        String userName = JwtUtil.getClaim(token);
+        ScyUser scyUser = getScyUserByName(userName);
+        if (checkUserStatus(scyUser)) {
+            return tokenService.genToken(userName, scyUser.getPassword());
         }
         return null;
     }
 
-    void invalidToken(String userName, String token) {
-    }
 }
