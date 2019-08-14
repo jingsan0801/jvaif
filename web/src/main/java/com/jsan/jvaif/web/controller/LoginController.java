@@ -4,16 +4,10 @@ import com.jsan.jvaif.inf.constant.PublicConstant;
 import com.jsan.jvaif.inf.service.IScyUserService;
 import com.jsan.jvaif.inf.util.ResultUtil;
 import com.jsan.jvaif.inf.vo.Result;
-import com.jsan.jvaif.web.annotation.SkipToken;
+import com.jsan.jvaif.web.annotation.SkipAuthToken;
 import io.swagger.annotations.*;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.UsernamePasswordToken;
-import org.apache.shiro.subject.Subject;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -39,36 +33,33 @@ public class LoginController {
         @ApiImplicitParam(name = "password", value = "密码", required = true, defaultValue = "wangjc0801")})
     @ApiResponses({@ApiResponse(code = 903, message = "身份验证失败")})
     @PostMapping(value = "/login")
+    @SkipAuthToken
     public Result login(
         @RequestParam(name = "userName")
             String userName,
         @RequestParam(name = "password")
             String password) {
-        Subject subject = SecurityUtils.getSubject();
-        UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(userName, password);
-        try {
-            subject.login(usernamePasswordToken);
-            return ResultUtil.success(success_login, subject.getPrincipal());
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResultUtil.fail(exception_token_check_fail, null);
+        String authToken = scyUserService.login(userName, password);
+        if (StringUtils.isEmpty(authToken)) {
+            return ResultUtil.fail(exception_login);
         }
+        return ResultUtil.success(success_login, authToken);
     }
 
     @ApiOperation("未登录提示")
-    @GetMapping(value = "/login")
-    @SkipToken
+    @RequestMapping(value = "/loginError")
+    @SkipAuthToken
     public Result login(HttpServletRequest request) {
-        String authToken = request.getHeader(PublicConstant.REQUEST_AUTH_HEADER);
-        if (StringUtils.isEmpty(authToken)) {
-            return ResultUtil.fail(exception_token_required);
+        Result rs = (Result)request.getAttribute("rs");
+        if (rs != null) {
+            return rs;
         }
-        return ResultUtil.fail(exception_token_check_fail);
+        return ResultUtil.fail(exception_login);
     }
 
     @ApiOperation("未授权提示")
     @GetMapping(value = "/unAuth")
-    @SkipToken
+    @SkipAuthToken
     public Result unAuth() {
         return ResultUtil.fail(exception_auth_deny);
     }

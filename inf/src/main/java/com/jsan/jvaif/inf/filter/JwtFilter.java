@@ -1,27 +1,27 @@
 package com.jsan.jvaif.inf.filter;
 
-import com.alibaba.fastjson.JSON;
 import com.auth0.jwt.exceptions.SignatureVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.jsan.jvaif.common.util.CommonUtil;
 import com.jsan.jvaif.inf.constant.PublicConstant;
 import com.jsan.jvaif.inf.constant.ResultEnum;
 import com.jsan.jvaif.inf.domain.JwtToken;
-import com.jsan.jvaif.inf.exption.BusinessException;
 import com.jsan.jvaif.inf.util.ResultUtil;
 import com.jsan.jvaif.inf.vo.Result;
+import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.web.filter.authc.BasicHttpAuthenticationFilter;
-import org.springframework.http.HttpStatus;
 
+import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
 
 /**
  * @description: 通过jwt方式实现的token验证filter, 在interceptor之前触发
+ * 这里发生的异常,ExceptionHandler是捕获不到的, 所以身份验证不通过时
+ * 通过response401() 跳转到controller, 由exceptionController统一接管
  * @author: jcwang
  * @create: 2019-08-12 10:40
  **/
@@ -71,12 +71,13 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
                 executeLogin(request, response);
             } catch (Exception e) {
                 rs = false;
-                if (e instanceof SignatureVerificationException) {
-                    response401(request,response, ResultUtil.fail(ResultEnum.exception_token_illegal));
+                if ((e instanceof SignatureVerificationException) || (e instanceof AuthenticationException)) {
+                    response401(request, response, ResultUtil.fail(ResultEnum.exception_token_illegal));
                 } else if (e instanceof TokenExpiredException) {
-                    response401(request,response, ResultUtil.fail(ResultEnum.exception_token_expired));
+                    response401(request, response, ResultUtil.fail(ResultEnum.exception_token_expired));
                 } else {
-                    response401(request,response, ResultUtil.fail(ResultEnum.exception_common,CommonUtil.getStackTraceInfoOfException(e)));
+                    response401(request, response,
+                        ResultUtil.fail(ResultEnum.exception_common, CommonUtil.getStackTraceInfoOfException(e)));
                 }
             }
         }
@@ -103,14 +104,15 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
      * @param resp
      */
     private void response401(ServletRequest req, ServletResponse resp, Result rs) {
-        HttpServletResponse httpServletResponse = (HttpServletResponse) resp;
-        httpServletResponse.setStatus(HttpStatus.UNAUTHORIZED.value());
-        httpServletResponse.setCharacterEncoding("UTF-8");
-        httpServletResponse.setContentType("application/json; charset=utf-8");
-        try (PrintWriter out = httpServletResponse.getWriter()) {
-            out.append(JSON.toJSONString(rs));
-        } catch (IOException e) {
-            throw new BusinessException(ResultEnum.exception_common);
+        HttpServletRequest httpServletRequest = (HttpServletRequest)req;
+        HttpServletResponse httpServletResponse = (HttpServletResponse)resp;
+        try {
+            // 这个类里发生的异常,ExceptionHandler是捕获不到的, 所以身份验证不通过时
+            // 通过response401() 跳转到controller, 由exceptionController统一接管
+            httpServletRequest.setAttribute("rs", rs);
+            req.getRequestDispatcher("/loginError").forward(httpServletRequest, httpServletResponse);
+        } catch (ServletException | IOException e) {
+            e.printStackTrace();
         }
     }
 }

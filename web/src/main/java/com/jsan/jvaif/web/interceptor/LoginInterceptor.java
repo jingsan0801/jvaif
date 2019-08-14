@@ -3,7 +3,7 @@ package com.jsan.jvaif.web.interceptor;
 import com.jsan.jvaif.inf.constant.PublicConstant;
 import com.jsan.jvaif.inf.exption.BusinessException;
 import com.jsan.jvaif.inf.service.IScyUserService;
-import com.jsan.jvaif.web.annotation.SkipToken;
+import com.jsan.jvaif.web.annotation.SkipAuthToken;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -42,9 +42,9 @@ public class LoginInterceptor implements HandlerInterceptor {
 
         Method handlerMethod = ((HandlerMethod)handler).getMethod();
         // 检查是否要跳过token验证
-        if (handlerMethod.isAnnotationPresent(SkipToken.class)) {
-            SkipToken skipToken = handlerMethod.getAnnotation(SkipToken.class);
-            if (skipToken.required()) {
+        if (handlerMethod.isAnnotationPresent(SkipAuthToken.class)) {
+            SkipAuthToken skipAuthToken = handlerMethod.getAnnotation(SkipAuthToken.class);
+            if (skipAuthToken.required()) {
                 return true;
             }
         }
