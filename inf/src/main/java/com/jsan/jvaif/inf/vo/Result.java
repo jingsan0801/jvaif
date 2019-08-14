@@ -22,8 +22,10 @@ public class Result {
     }
 
     public Result(ResultEnum rs) {
-        this.code = rs.getCode();
-        this.msg = rs.getMsg();
-        this.success = rs.isSuccessFlag();
+        if(rs != null) {
+            this.code = rs.getCode();
+            this.msg = rs.getMsg();
+            this.success = rs.isSuccessFlag();
+        }
     }
 }

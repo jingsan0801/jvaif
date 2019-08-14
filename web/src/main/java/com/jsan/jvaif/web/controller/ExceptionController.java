@@ -30,7 +30,7 @@ public class ExceptionController {
      */
     @ExceptionHandler(AuthenticationException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    public Result handleAuthenticationException(HttpServletRequest request, Throwable ex) {
+    public Result handleAuthenticationException(HttpServletRequest request, AuthenticationException ex) {
         log.info(CommonUtil.getStackTraceInfoOfException(ex));
         return ResultUtil.fail(ResultEnum.exception_token_check_fail, ex.getMessage());
 
@@ -41,10 +41,9 @@ public class ExceptionController {
      */
     @ExceptionHandler(BusinessException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public Result handleBusinessException(HttpServletRequest request, Throwable ex) {
-        BusinessException bex = (BusinessException)ex;
+    public Result handleBusinessException(HttpServletRequest request, BusinessException ex) {
         log.info(CommonUtil.getStackTraceInfoOfException(ex));
-        return ResultUtil.fail(bex.getResultEnum(),bex.getAdditionForJson());
+        return ResultUtil.fail(ex.getResultEnum(), ex.getAdditionForJson());
     }
 
     /**
@@ -52,7 +51,7 @@ public class ExceptionController {
      */
     @ExceptionHandler(MyBatisSystemException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public Result handleDbException(HttpServletRequest request, Throwable ex) {
+    public Result handleDbException(HttpServletRequest request, MyBatisSystemException ex) {
         log.error(CommonUtil.getStackTraceInfoOfException(ex));
         return ResultUtil.fail(ResultEnum.exception_db, CommonUtil.getStackTraceInfoOfException(ex));
     }
