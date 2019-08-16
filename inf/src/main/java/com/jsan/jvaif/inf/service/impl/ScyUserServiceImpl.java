@@ -5,14 +5,14 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.jsan.jvaif.common.util.MathUtil;
 import com.jsan.jvaif.inf.constant.PublicConstant;
 import com.jsan.jvaif.inf.constant.ResultEnum;
+import com.jsan.jvaif.inf.domain.ScyAuth;
+import com.jsan.jvaif.inf.domain.ScyRole;
 import com.jsan.jvaif.inf.domain.ScyUser;
 import com.jsan.jvaif.inf.exption.BusinessException;
 import com.jsan.jvaif.inf.mapper.ScyUserMapper;
 import com.jsan.jvaif.inf.service.IScyUserService;
 import com.jsan.jvaif.inf.service.ITokenService;
 import com.jsan.jvaif.inf.util.JwtUtil;
-import com.jsan.jvaif.inf.util.ResultUtil;
-import com.jsan.jvaif.inf.vo.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.crypto.hash.SimpleHash;
@@ -20,6 +20,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
+
+import java.util.Set;
 
 import static com.jsan.jvaif.inf.constant.ResultEnum.*;
 
@@ -57,7 +59,7 @@ public class ScyUserServiceImpl extends ServiceImpl<ScyUserMapper, ScyUser> impl
      * @return scyUser
      */
     @Override
-    public Result addUser(String userName, String password) {
+    public int addUser(String userName, String password) {
         ScyUser queryRs =
             scyUserMapper.selectOne(new QueryWrapper<ScyUser>().eq("user_name", userName).eq("status", 1));
         if (queryRs != null) {
@@ -70,8 +72,7 @@ public class ScyUserServiceImpl extends ServiceImpl<ScyUserMapper, ScyUser> impl
         scyUser.setStatus(PublicConstant.COMMON_VALID);
         scyUser.setSalt(salt);
         scyUser.setPassword((String)shiroMd5(password, userName, salt));
-        int rs = scyUserMapper.insert(scyUser);
-        return ResultUtil.success(rs);
+        return scyUserMapper.insert(scyUser);
     }
 
     /**
@@ -194,4 +195,25 @@ public class ScyUserServiceImpl extends ServiceImpl<ScyUserMapper, ScyUser> impl
         return null;
     }
 
+    /**
+     * 按用户名获取所属角色
+     *
+     * @param userName 用户名
+     * @return 该用户名的所有角色信息
+     */
+    @Override
+    public Set<ScyRole> getRoleSetByUserName(String userName) {
+        return scyUserMapper.getRoleSetByUsername(userName);
+    }
+
+    /**
+     * 按用户名获取权限集合
+     *
+     * @param userName 用户名
+     * @return 该用户的所有权限信息
+     */
+    @Override
+    public Set<ScyAuth> getAuthSetByUserName(String userName) {
+        return scyUserMapper.getAuthSetByUserName(userName);
+    }
 }

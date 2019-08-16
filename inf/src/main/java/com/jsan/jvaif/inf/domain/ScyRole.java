@@ -36,4 +36,9 @@ public class ScyRole {
      * 状态
      */
     private String status;
+
+    /**
+     * 角色编码
+     */
+    private String roleCode;
 }

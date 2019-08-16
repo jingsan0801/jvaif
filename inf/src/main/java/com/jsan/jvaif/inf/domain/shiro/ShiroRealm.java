@@ -1,18 +1,25 @@
 package com.jsan.jvaif.inf.domain.shiro;
 
 import com.jsan.jvaif.inf.domain.JwtToken;
+import com.jsan.jvaif.inf.domain.ScyAuth;
+import com.jsan.jvaif.inf.domain.ScyRole;
 import com.jsan.jvaif.inf.exption.BusinessException;
 import com.jsan.jvaif.inf.service.IScyUserService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.SimpleAuthenticationInfo;
 import org.apache.shiro.authz.AuthorizationInfo;
+import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
+
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static com.jsan.jvaif.inf.constant.ResultEnum.exception_token_required;
 
@@ -21,6 +28,7 @@ import static com.jsan.jvaif.inf.constant.ResultEnum.exception_token_required;
  * @author: jcwang
  * @create: 2019-08-03 00:50
  **/
+@Slf4j
 public class ShiroRealm extends AuthorizingRealm {
 
     @Resource
@@ -50,6 +58,17 @@ public class ShiroRealm extends AuthorizingRealm {
      */
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
+        String userName = (String)principalCollection.getPrimaryPrincipal();
+        SimpleAuthorizationInfo simpleAuthorizationInfo = new SimpleAuthorizationInfo();
+
+        Set<String> roleCodeSet = scyUserService.getRoleSetByUserName(userName).stream().map(ScyRole::getRoleCode).collect(
+            Collectors.toSet());
+        Set<String> authExpSet = scyUserService.getAuthSetByUserName(userName).stream().map(ScyAuth::getAuthExp).collect(
+            Collectors.toSet());
+        simpleAuthorizationInfo.setRoles(roleCodeSet);
+        simpleAuthorizationInfo.setStringPermissions(authExpSet);
+
+        log.info("from doGetAuthorizationInfo: {}, {}, {}",userName,roleCodeSet,authExpSet);
         return null;
     }
 

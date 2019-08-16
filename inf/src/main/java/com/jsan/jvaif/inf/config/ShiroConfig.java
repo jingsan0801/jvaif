@@ -5,6 +5,7 @@ import com.jsan.jvaif.inf.filter.JwtFilter;
 import org.apache.shiro.mgt.DefaultSessionStorageEvaluator;
 import org.apache.shiro.mgt.DefaultSubjectDAO;
 import org.apache.shiro.mgt.SecurityManager;
+import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
@@ -12,6 +13,7 @@ import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreato
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.PropertySource;
 
 import javax.servlet.Filter;
@@ -33,13 +35,6 @@ public class ShiroConfig {
 
     @Value("#{'${static.urls}'.split(',')}")
     private List<String> staticUrls;
-
-    @Bean
-    public static DefaultAdvisorAutoProxyCreator getDefaultAdvisorAutoProxyCreator() {
-        DefaultAdvisorAutoProxyCreator defaultAdvisorAutoProxyCreator = new DefaultAdvisorAutoProxyCreator();
-        defaultAdvisorAutoProxyCreator.setUsePrefix(true);
-        return defaultAdvisorAutoProxyCreator;
-    }
 
     /**
      * @return 身份认证Realm
@@ -65,19 +60,6 @@ public class ShiroConfig {
     }
 
     /**
-     * 开启shiro aop注解支持. 使用代理方式; 所以需要开启代码支持;
-     *
-     * @param securityManager 安全管理器
-     * @return 授权Advisor
-     */
-    public AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor(SecurityManager securityManager) {
-        AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor =
-            new AuthorizationAttributeSourceAdvisor();
-        authorizationAttributeSourceAdvisor.setSecurityManager(securityManager);
-        return authorizationAttributeSourceAdvisor;
-    }
-
-    /**
      * 设置shiro的拦截器
      *
      * @param securityManager
@@ -100,13 +82,18 @@ public class ShiroConfig {
         // shiro自带filter
         Map<String, String> filterChainDefinitionMap = new LinkedHashMap<>();
         // 静态资源不过滤
-        for (String url : staticUrls) {
-            filterChainDefinitionMap.put(url, "anon");
+        if(staticUrls != null) {
+            for (String url : staticUrls) {
+                filterChainDefinitionMap.put(url, "anon");
+            }
         }
 
+
         // 指定url不过滤
-        for (String url : shiroAnnoUrls) {
-            filterChainDefinitionMap.put(url, "anon");
+        if(shiroAnnoUrls != null) {
+            for (String url : shiroAnnoUrls) {
+                filterChainDefinitionMap.put(url, "anon");
+            }
         }
 
         filterChainDefinitionMap.put("/**", "jwt");
@@ -116,6 +103,44 @@ public class ShiroConfig {
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
 
         return shiroFilterFactoryBean;
+    }
+
+    /**
+     * 开启shiro aop注解支持.否则@RequiresRoles等注解无法生效
+     * 使用代理方式;
+     *
+     * @param securityManager
+     * @return
+     */
+    @Bean
+    public AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor(SecurityManager securityManager) {
+        AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor =
+            new AuthorizationAttributeSourceAdvisor();
+        authorizationAttributeSourceAdvisor.setSecurityManager(securityManager);
+        return authorizationAttributeSourceAdvisor;
+    }
+
+    /**
+     * Shiro生命周期处理器
+     *
+     * @return
+     */
+    @Bean
+    public LifecycleBeanPostProcessor lifecycleBeanPostProcessor() {
+        return new LifecycleBeanPostProcessor();
+    }
+
+    /**
+     * 自动创建代理
+     *
+     * @return
+     */
+    @Bean
+    @DependsOn({"lifecycleBeanPostProcessor"})
+    public DefaultAdvisorAutoProxyCreator advisorAutoProxyCreator() {
+        DefaultAdvisorAutoProxyCreator advisorAutoProxyCreator = new DefaultAdvisorAutoProxyCreator();
+        advisorAutoProxyCreator.setProxyTargetClass(true);
+        return advisorAutoProxyCreator;
     }
 
 }

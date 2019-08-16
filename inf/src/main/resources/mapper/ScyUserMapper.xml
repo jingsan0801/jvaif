@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jsan.jvaif.inf.mapper.ScyUserMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.jsan.jvaif.inf.domain.ScyUser">
+        <id column="id" property="id"/>
+        <result column="user_name" property="userName"/>
+        <result column="password" property="password"/>
+        <result column="salt" property="salt"/>
+        <result column="status" property="status"/>
+        <result column="created_time" property="createdTime"/>
+    </resultMap>
+
+    <select id="getRoleSetByUsername" resultType="com.jsan.jvaif.inf.domain.ScyRole">
+        <![CDATA[
+        select *
+        from t_scy_user t1,
+             t_scy_role t2,
+             t_scy_user_role t3
+        where t1.id = t3.user_id
+          and t2.id = t3.role_Id
+          and t1.user_name = #{userName}
+        ]]>
+    </select>
+    <select id="getAuthSetByUserName" resultType="com.jsan.jvaif.inf.domain.ScyAuth">
+        <![CDATA[
+        select t4.*
+        from t_scy_user t1,
+             t_scy_role t2,
+             t_scy_user_role t3,
+             t_scy_auth t4,
+             t_scy_role_auth t5
+        where t1.id = t3.user_id
+          and t2.id = t3.role_Id
+          and t4.id = t5.auth_id
+          and t2.id = t5.role_id
+          and t1.user_name =  #{userName}
+        ]]>
+    </select>
+</mapper>

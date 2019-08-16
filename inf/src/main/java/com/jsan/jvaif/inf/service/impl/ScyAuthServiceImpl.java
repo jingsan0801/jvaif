@@ -1,9 +1,12 @@
 package com.jsan.jvaif.inf.service.impl;
 
+import com.jsan.jvaif.inf.mapper.ScyAuthMapper;
 import com.jsan.jvaif.inf.service.IScyAuthService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -14,6 +17,10 @@ import java.util.Map;
 @Slf4j
 @Service
 public class ScyAuthServiceImpl implements IScyAuthService {
+
+    @Resource
+    private ScyAuthMapper scyAuthMapper;
+
     /**
      * 获取url和对应的权限配置
      * key: url
@@ -23,6 +30,7 @@ public class ScyAuthServiceImpl implements IScyAuthService {
      */
     @Override
     public Map<String, String> getShiroFilterChain() {
-        return null;
+        Map<String, String> rsMap = new HashMap<>();
+        return rsMap;
     }
 }

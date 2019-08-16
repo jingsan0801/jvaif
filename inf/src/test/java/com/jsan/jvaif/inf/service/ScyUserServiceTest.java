@@ -3,14 +3,17 @@ package com.jsan.jvaif.inf.service;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.jsan.jvaif.inf.InfApplicationTests;
+import com.jsan.jvaif.inf.domain.ScyAuth;
+import com.jsan.jvaif.inf.domain.ScyRole;
 import com.jsan.jvaif.inf.domain.ScyUser;
-import com.jsan.jvaif.inf.vo.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Assert;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.Set;
 
 /**
  * @description:
@@ -24,13 +27,13 @@ public class ScyUserServiceTest extends InfApplicationTests {
 
     @Autowired
     private IScyUserService scyUserService;
+    private String userName = "wangjc0801";
 
     @Test
     public void addUser() {
-        String userName = "wangjc0801";
         String password = "wangjc0801";
 
-        Result rs = scyUserService.addUser(userName, password);
+        int rs = scyUserService.addUser(userName, password);
         log.info("addUser rs = {}", rs);
         selectByUserName(userName);
     }
@@ -63,7 +66,6 @@ public class ScyUserServiceTest extends InfApplicationTests {
 
     @Test
     public void encodePasswordTest() {
-        String userName = "wangjc0801";
         String password = "111111";
         ScyUser queryRs = scyUserService.getOne(new QueryWrapper<ScyUser>().eq("user_name", userName));
         String salt = queryRs.getSalt();
@@ -71,6 +73,19 @@ public class ScyUserServiceTest extends InfApplicationTests {
         log.info("encode password = {}", rs);
 
         Assert.assertEquals(rs, queryRs.getPassword());
+    }
+
+    @Test
+    public void getRolesByUserName() {
+        Set<ScyRole> roles = scyUserService.getRoleSetByUserName(userName);
+        log.info("role : {}",roles);
+    }
+
+    @Test
+    public void getAuthSetByUserName() {
+        Set<ScyAuth> authSet = scyUserService.getAuthSetByUserName(userName);
+        Assert.assertEquals(authSet.size(),3);
+        log.info("auth set: {}", authSet);
     }
 
 }

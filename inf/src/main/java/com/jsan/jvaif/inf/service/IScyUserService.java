@@ -1,8 +1,12 @@
 package com.jsan.jvaif.inf.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.jsan.jvaif.inf.domain.ScyAuth;
+import com.jsan.jvaif.inf.domain.ScyRole;
 import com.jsan.jvaif.inf.domain.ScyUser;
 import com.jsan.jvaif.inf.vo.Result;
+
+import java.util.Set;
 
 /**
  *
@@ -40,9 +44,9 @@ public interface IScyUserService extends IService<ScyUser> {
      *
      * @param userName 用户名
      * @param password 密码
-     * @return Result
+     * @return int
      */
-    Result addUser(String userName, String password);
+    int addUser(String userName, String password);
 
     /**
      * md5加密
@@ -78,5 +82,21 @@ public interface IScyUserService extends IService<ScyUser> {
      * @return 新的token
      */
     String refreshToken(String token);
+
+    /**
+     * 按用户名获取所属角色
+     * @param userName 用户名
+     * @return 该用户名的所有角色信息
+     */
+    Set<ScyRole> getRoleSetByUserName(String userName);
+
+    /**
+     * 按用户名获取权限集合
+     * @param userName 用户名
+     * @return  该用户的所有权限信息
+     */
+    Set<ScyAuth> getAuthSetByUserName(String userName);
+
+
 
 }

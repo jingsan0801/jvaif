@@ -34,8 +34,10 @@ web层, 服务入口, 包括给外部提供Restful接口, 展示页面等.
 
 ### todo:
 1. 使用shiro控制权限
+    1. 给user:create设置权限
 2. role/auth/menu管理
-3. 引入EhCache或者Redis作为缓存
+3. 代码自动生成工具
+4. 引入spring 校验注解
 
     
 
@@ -53,4 +55,8 @@ web层, 服务入口, 包括给外部提供Restful接口, 展示页面等.
 1. 更新token以后,旧的token应该置为失效
 2. 引入swagger
 3. 引入redis
+
+2019-08-14:
+1. 优化代码: 完善返回给接口的异常信息显示
+2. 完成更新token功能,更新后旧的token置为失效
  

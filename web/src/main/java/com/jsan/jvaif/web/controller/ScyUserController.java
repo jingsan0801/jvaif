@@ -6,6 +6,8 @@ import com.jsan.jvaif.inf.util.ResultUtil;
 import com.jsan.jvaif.inf.vo.Result;
 import com.jsan.jvaif.web.annotation.SkipAuthToken;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -60,13 +62,16 @@ public class ScyUserController {
      * @param password 密码
      * @return Result
      */
+    @RequiresRoles("admin")
+    @RequiresPermissions("user:add")
     @PostMapping(value = "")
     public Result addUser(
         @RequestParam("userName")
             String userName,
         @RequestParam("password")
             String password) {
-        return scyUserService.addUser(userName, password);
+        int insertRs = scyUserService.addUser(userName, password);
+        return ResultUtil.success(insertRs);
     }
 
 }
