@@ -5,6 +5,7 @@ import com.jsan.jvaif.inf.domain.ScyAuth;
 import com.jsan.jvaif.inf.domain.ScyRole;
 import com.jsan.jvaif.inf.exption.BusinessException;
 import com.jsan.jvaif.inf.service.IScyUserService;
+import com.jsan.jvaif.inf.util.JwtUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
@@ -58,7 +59,8 @@ public class ShiroRealm extends AuthorizingRealm {
      */
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
-        String userName = (String)principalCollection.getPrimaryPrincipal();
+        String authToken = (String)principalCollection.getPrimaryPrincipal();
+        String userName = JwtUtil.getClaim(authToken);
         SimpleAuthorizationInfo simpleAuthorizationInfo = new SimpleAuthorizationInfo();
 
         Set<String> roleCodeSet = scyUserService.getRoleSetByUserName(userName).stream().map(ScyRole::getRoleCode).collect(

@@ -21,7 +21,7 @@ public interface PublicConstant {
     String REDIS_KEY_TOKEN = "auth_token_";
 
     /**
-     * jwt token过期时间, 单位毫秒
+     * jwt token过期时间, 单位毫秒;默认12小时
      */
-    long TOKEN_EXPIRE_TIME = 10 * 60 * 1000;
+    long TOKEN_EXPIRE_TIME = 12 * 60 * 60 * 1000;
 }

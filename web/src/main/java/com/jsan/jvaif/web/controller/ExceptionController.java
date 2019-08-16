@@ -12,6 +12,7 @@ import com.jsan.jvaif.inf.exption.BusinessException;
 import com.jsan.jvaif.inf.util.ResultUtil;
 import com.jsan.jvaif.inf.vo.Result;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.authz.UnauthorizedException;
 import org.mybatis.spring.MyBatisSystemException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -24,6 +25,16 @@ import javax.servlet.http.HttpServletRequest;
 @RestControllerAdvice
 @Slf4j
 public class ExceptionController {
+    /**
+     * 权限认证异常
+     */
+    @ExceptionHandler(UnauthorizedException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public Result handleUnauthorizedException(HttpServletRequest request, UnauthorizedException ex) {
+        log.info(CommonUtil.getStackTraceInfoOfException(ex));
+        return ResultUtil.fail(ResultEnum.exception_auth_deny, ex.getMessage());
+
+    }
 
     /**
      * 身份认证异常
