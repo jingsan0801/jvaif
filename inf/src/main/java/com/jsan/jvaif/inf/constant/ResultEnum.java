@@ -24,9 +24,9 @@ public enum ResultEnum {
      */
     exception_common("9000", "系统异常,请联系我们", false),
 
-    exception_param_null("9001", "参数对象为空", false),
+    exception_param_required("9001", "参数校验异常", false),
 
-    exception_db_sql_require("9002", "查询sql语句为空", false),
+    exception_db_sql_required("9002", "查询sql语句为空", false),
 
     exception_db("9003", "数据库异常", false),
 

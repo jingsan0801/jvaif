@@ -21,10 +21,29 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.naming.AuthenticationException;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @RestControllerAdvice
 @Slf4j
 public class ExceptionController {
+
+    /**
+     * 参数校验异常
+     */
+    @ExceptionHandler(ConstraintViolationException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Result handleUnauthorizedException(HttpServletRequest request, ConstraintViolationException ex) {
+        // 获取异常提示信息
+        Set exMsgSet = ex.getConstraintViolations().stream()
+            .map((Function<ConstraintViolation<?>, Object>)ConstraintViolation::getMessage).collect(Collectors.toSet());
+        return ResultUtil.fail(ResultEnum.exception_param_required, exMsgSet);
+
+    }
+
     /**
      * 权限认证异常
      */

@@ -7,10 +7,11 @@ import com.jsan.jvaif.inf.vo.Result;
 import com.jsan.jvaif.web.annotation.SkipAuthToken;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.apache.shiro.authz.annotation.RequiresRoles;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.validation.constraints.NotBlank;
 
 /**
  * @description: 用户controller
@@ -21,6 +22,7 @@ import javax.annotation.Resource;
 @RestController
 @RequestMapping("/scy/user")
 @Slf4j
+@Validated
 public class ScyUserController {
 
     @Resource
@@ -62,12 +64,15 @@ public class ScyUserController {
      * @param password 密码
      * @return Result
      */
+    //@RequiresRoles("admin")
     @RequiresPermissions("user:add")
     @PostMapping(value = "")
     public Result addUser(
         @RequestParam("userName")
+        @NotBlank(message = "用户名不能为空")
             String userName,
         @RequestParam("password")
+        @NotBlank(message = "密码不能为空")
             String password) {
         int insertRs = scyUserService.addUser(userName, password);
         return ResultUtil.success(insertRs);
