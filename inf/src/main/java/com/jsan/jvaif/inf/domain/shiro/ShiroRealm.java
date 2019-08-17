@@ -18,7 +18,6 @@ import org.apache.shiro.subject.PrincipalCollection;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
-
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -63,15 +62,16 @@ public class ShiroRealm extends AuthorizingRealm {
         String userName = JwtUtil.getClaim(authToken);
         SimpleAuthorizationInfo simpleAuthorizationInfo = new SimpleAuthorizationInfo();
 
-        Set<String> roleCodeSet = scyUserService.getRoleSetByUserName(userName).stream().map(ScyRole::getRoleCode).collect(
-            Collectors.toSet());
-        Set<String> authExpSet = scyUserService.getAuthSetByUserName(userName).stream().map(ScyAuth::getAuthExp).collect(
-            Collectors.toSet());
+        Set<String> roleCodeSet = scyUserService.getRoleSetByUserName(userName).stream().map(ScyRole::getRoleCode)
+            .collect(Collectors.toSet());
+        Set<String> authExpSet =
+            scyUserService.getAuthSetByUserName(userName).stream().map(ScyAuth::getAuthExp).collect(Collectors.toSet());
         simpleAuthorizationInfo.setRoles(roleCodeSet);
         simpleAuthorizationInfo.setStringPermissions(authExpSet);
 
-        log.info("from doGetAuthorizationInfo: {}, {}, {}",userName,roleCodeSet,authExpSet);
-        return null;
+        log.info("from doGetAuthorizationInfo: {}, {}, {}", userName, roleCodeSet, authExpSet);
+
+        return simpleAuthorizationInfo;
     }
 
     /**
@@ -95,4 +95,26 @@ public class ShiroRealm extends AuthorizingRealm {
         return new SimpleAuthenticationInfo(authToken, authToken, getName());
     }
 
+    /**
+     * Clears out the AuthorizationInfo cache entry for the specified account.
+     * <p/>
+     * This method is provided as a convenience to subclasses so they can invalidate a cache entry when they
+     * change an account's authorization data (add/remove roles or permissions) during runtime.  Because an account's
+     * AuthorizationInfo can be cached, there needs to be a way to invalidate the cache for only that account so that
+     * subsequent authorization operations don't used the (old) cached value if account data changes.
+     * <p/>
+     * After this method is called, the next authorization check for that same account will result in a call to
+     * {@link #getAuthorizationInfo(PrincipalCollection) getAuthorizationInfo}, and the
+     * resulting return value will be cached before being returned so it can be reused for later authorization checks.
+     * <p/>
+     * If you wish to clear out all associated cached data (and not just authorization data), use the
+     * {@link #clearCache(PrincipalCollection)} method instead (which will in turn call this
+     * method by default).
+     *
+     * @param principals the principals of the account for which to clear the cached AuthorizationInfo.
+     */
+    @Override
+    public void clearCachedAuthorizationInfo(PrincipalCollection principals) {
+        super.clearCachedAuthorizationInfo(principals);
+    }
 }

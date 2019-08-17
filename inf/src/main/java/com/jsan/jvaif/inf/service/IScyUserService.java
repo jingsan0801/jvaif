@@ -97,6 +97,11 @@ public interface IScyUserService extends IService<ScyUser> {
      */
     Set<ScyAuth> getAuthSetByUserName(String userName);
 
+    /**
+     * 退出登录
+     */
+    void logout();
+
 
 
 }

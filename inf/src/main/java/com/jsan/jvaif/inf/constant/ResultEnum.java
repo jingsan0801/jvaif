@@ -17,6 +17,8 @@ public enum ResultEnum {
 
     exception_login("1001","登录失败",false),
 
+    success_logout("10002","退出成功",true),
+
     /**
      * 系统级异常 90xx
      */

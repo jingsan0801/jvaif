@@ -110,7 +110,7 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
             // 这个类里发生的异常,ExceptionHandler是捕获不到的, 所以身份验证不通过时
             // 通过response401() 跳转到controller, 由exceptionController统一接管
             httpServletRequest.setAttribute("rs", rs);
-            req.getRequestDispatcher("/loginError").forward(httpServletRequest, httpServletResponse);
+            req.getRequestDispatcher("/login_msg").forward(httpServletRequest, httpServletResponse);
         } catch (ServletException | IOException e) {
             e.printStackTrace();
         }

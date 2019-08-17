@@ -46,8 +46,15 @@ public class LoginController {
         return ResultUtil.success(success_login, authToken);
     }
 
+    @ApiOperation("退出提示")
+    @GetMapping(value = "/logout_msg")
+    public Result logout() {
+        scyUserService.logout();
+        return ResultUtil.success(success_logout,true);
+    }
+
     @ApiOperation("未登录提示")
-    @RequestMapping(value = "/loginError")
+    @RequestMapping(value = "/login_msg")
     @SkipAuthToken
     public Result login(HttpServletRequest request) {
         Result rs = (Result)request.getAttribute("rs");

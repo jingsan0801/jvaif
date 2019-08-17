@@ -62,7 +62,6 @@ public class ScyUserController {
      * @param password 密码
      * @return Result
      */
-    @RequiresRoles("admin")
     @RequiresPermissions("user:add")
     @PostMapping(value = "")
     public Result addUser(

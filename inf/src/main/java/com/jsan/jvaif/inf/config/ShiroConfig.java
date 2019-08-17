@@ -2,6 +2,7 @@ package com.jsan.jvaif.inf.config;
 
 import com.jsan.jvaif.inf.domain.shiro.ShiroRealm;
 import com.jsan.jvaif.inf.filter.JwtFilter;
+import com.jsan.jvaif.inf.filter.ScyLogoutFilter;
 import org.apache.shiro.mgt.DefaultSessionStorageEvaluator;
 import org.apache.shiro.mgt.DefaultSubjectDAO;
 import org.apache.shiro.mgt.SecurityManager;
@@ -77,6 +78,7 @@ public class ShiroConfig {
         Map<String, Filter> customFilter = new LinkedHashMap<>();
         // 可通过继承自带filter的方式实现自定义filter, put到customFilter中实现
         customFilter.put("jwt", new JwtFilter());
+        customFilter.put("logout",new ScyLogoutFilter());
         shiroFilterFactoryBean.setFilters(customFilter);
 
         // shiro自带filter
@@ -96,6 +98,7 @@ public class ShiroConfig {
             }
         }
 
+        filterChainDefinitionMap.put("/logout","logout");
         filterChainDefinitionMap.put("/**", "jwt");
 
         // 这里的filter是从上向下依次执行, 一般将/** : anon放到最后

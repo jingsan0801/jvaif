@@ -8,14 +8,17 @@ import com.jsan.jvaif.inf.constant.ResultEnum;
 import com.jsan.jvaif.inf.domain.ScyAuth;
 import com.jsan.jvaif.inf.domain.ScyRole;
 import com.jsan.jvaif.inf.domain.ScyUser;
+import com.jsan.jvaif.inf.domain.shiro.ShiroRealm;
 import com.jsan.jvaif.inf.exption.BusinessException;
 import com.jsan.jvaif.inf.mapper.ScyUserMapper;
 import com.jsan.jvaif.inf.service.IScyUserService;
 import com.jsan.jvaif.inf.service.ITokenService;
 import com.jsan.jvaif.inf.util.JwtUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.crypto.hash.SimpleHash;
+import org.apache.shiro.mgt.RealmSecurityManager;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -215,5 +218,16 @@ public class ScyUserServiceImpl extends ServiceImpl<ScyUserMapper, ScyUser> impl
     @Override
     public Set<ScyAuth> getAuthSetByUserName(String userName) {
         return scyUserMapper.getAuthSetByUserName(userName);
+    }
+
+    /**
+     * 退出登录
+     */
+    @Override
+    public void logout() {
+        RealmSecurityManager realmSecurityManager = (RealmSecurityManager)SecurityUtils.getSecurityManager();
+        ShiroRealm realm = (ShiroRealm)realmSecurityManager.getRealms().iterator().next();
+        // 退出登录时清空缓存中的权限, 避免修改权限后不能立即生效
+        realm.clearCachedAuthorizationInfo(SecurityUtils.getSubject().getPrincipals());
     }
 }
