@@ -25,6 +25,10 @@ Vo(vo)
 
 web层, 服务入口, 包括给外部提供Restful接口, 展示页面等.
 
+controller调用service时, controller一般返回Result, 但Service一般不要直接返回Result,而是返回有意义的dto或者其他类型的业务参数, 这样方便controller自己做封装.
+
+controller不应该保护业务逻辑, 而应该只包含展示逻辑.
+
 存放和web相关的
 控制层(controller)
 拦截器(interceptor)
@@ -34,7 +38,9 @@ web层, 服务入口, 包括给外部提供Restful接口, 展示页面等.
 
 ### todo:
 2. role/auth/menu管理
-
+3. 忘记密码
+4. shiro的记住我
+5. 重置密码
     
 
 ### note
@@ -65,3 +71,6 @@ web层, 服务入口, 包括给外部提供Restful接口, 展示页面等.
 
 2019-08-18:
 1. 引入自动生成代码工具
+
+2019-08-20:
+1. 完成图形验证码功能

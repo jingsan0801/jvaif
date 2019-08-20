@@ -16,12 +16,24 @@ public interface PublicConstant {
     String REQUEST_AUTH_HEADER = "auth_token";
 
     /**
-     * redis key name
+     * jwt token过期时间, 单位毫秒;默认12小时
+     */
+    long TOKEN_EXPIRE_TIME = 12 * 60 * 60 * 1000;
+
+    /**
+     * 图形验证码过期时间
+     */
+    long IMAGE_CODE_EXPIRE_SECONDS = 60;
+
+    // *********** redis key name **************
+
+    /**
+     * REDIS_KEY_TOKEN + userName 存放用户对应的auth_token
      */
     String REDIS_KEY_TOKEN = "auth_token_";
 
     /**
-     * jwt token过期时间, 单位毫秒;默认12小时
+     * REDIS_KEY_IMAGE_CODE + 随机数: 存放图形验证码内容, 做校验用
      */
-    long TOKEN_EXPIRE_TIME = 12 * 60 * 60 * 1000;
+    String REDIS_KEY_IMAGE_CODE = "image_code_";
 }

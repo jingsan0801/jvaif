@@ -13,11 +13,11 @@ public enum ResultEnum {
     /**
      * 成功
      */
-    success_login("1000", "登录成功", true),
+    success_login("10000", "登录成功", true),
 
-    exception_login("1001","登录失败",false),
+    success_logout("10002", "退出成功", true),
 
-    success_logout("10002","退出成功",true),
+    success_image_code_check("10003", "图形验证码校验通过", true),
 
     /**
      * 系统级异常 90xx
@@ -33,17 +33,24 @@ public enum ResultEnum {
     /**
      * 身份认证异常 91xx
      */
-    exception_token_check_fail("9100", "身份验证失败", false),
 
-    exception_user_exists("9101", "该用户已存在", false),
+    exception_login("9100", "登录失败", false),
 
-    exception_token_illegal("9104", "auth_token非法", false),
+    exception_token_check_fail("9101", "身份验证失败", false),
 
-    exception_token_expired("9105", "auth_token过期", false),
+    exception_user_exists("9102", "该用户已存在", false),
 
-    exception_token_required("9106", "auth_token不能为空", false),
+    exception_token_illegal("9103", "auth_token非法", false),
 
-    exception_token_decode_fail("9107", "解析token失败", false),
+    exception_token_expired("9104", "auth_token过期", false),
+
+    exception_token_required("9105", "auth_token不能为空", false),
+
+    exception_token_decode_fail("9106", "解析token失败", false),
+
+    exception_image_code_generator("9107", "图形验证码生成异常", false),
+
+    exception_image_code_check("9108", "图形验证码校验不通过", false),
 
     /**
      * 用户异常 92xx

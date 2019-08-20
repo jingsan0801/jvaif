@@ -1,6 +1,8 @@
 package com.jsan.jvaif.web.controller;
 
 import com.jsan.jvaif.inf.constant.PublicConstant;
+import com.jsan.jvaif.inf.dto.ImageCodeDto;
+import com.jsan.jvaif.inf.service.IImageCodeService;
 import com.jsan.jvaif.inf.service.IScyUserService;
 import com.jsan.jvaif.inf.util.ResultUtil;
 import com.jsan.jvaif.inf.vo.Result;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.constraints.NotBlank;
 
 import static com.jsan.jvaif.inf.constant.ResultEnum.*;
 
@@ -27,6 +30,9 @@ public class LoginController {
     @Resource
     private IScyUserService scyUserService;
 
+    @Resource
+    private IImageCodeService iImageCodeService;
+
     @ApiOperation("登录")
     @ApiImplicitParams({
         @ApiImplicitParam(name = "userName", value = "用户名", required = true, defaultValue = "wangjc0801"),
@@ -36,9 +42,9 @@ public class LoginController {
     @SkipAuthToken
     public Result login(
         @RequestParam(name = "userName")
-            String userName,
+        @NotBlank(message = "用户名不能为空") String userName,
         @RequestParam(name = "password")
-            String password) {
+        @NotBlank(message = "密码不能为空") String password) {
         String authToken = scyUserService.login(userName, password);
         if (StringUtils.isEmpty(authToken)) {
             return ResultUtil.fail(exception_login);
@@ -50,7 +56,7 @@ public class LoginController {
     @GetMapping(value = "/logout_msg")
     public Result logout() {
         scyUserService.logout();
-        return ResultUtil.success(success_logout,true);
+        return ResultUtil.success(success_logout, true);
     }
 
     @ApiOperation("未登录提示")
@@ -79,6 +85,32 @@ public class LoginController {
         String token = request.getHeader(PublicConstant.REQUEST_AUTH_HEADER);
         String newToken = scyUserService.refreshToken(token);
         return ResultUtil.success(newToken);
+    }
+
+    @ApiOperation("生成图形验证码")
+    @GetMapping("/image_code")
+    @SkipAuthToken
+    public Result genImageCode() {
+        ImageCodeDto imageCodeDto = iImageCodeService.generate();
+        return ResultUtil.success(imageCodeDto);
+    }
+
+    @ApiOperation("校验图形验证码")
+    @ApiImplicitParams({@ApiImplicitParam(name = "code", value = "验证码", required = true),
+        @ApiImplicitParam(name = "uuid", value = "请求生成图形验证码接口时返回的uuid", required = true)})
+    @PostMapping("/image_code/check")
+    @SkipAuthToken
+    public Result checkImageCode(
+        @RequestParam(name = "code")
+        @NotBlank(message = "验证码不能为空") String code,
+        @RequestParam(name = "uuid")
+        @NotBlank(message = "uuid不能为空") String uuid) {
+        boolean isOk = iImageCodeService.check(code, uuid);
+        if (isOk) {
+            return ResultUtil.success(success_image_code_check, true);
+        } else {
+            return ResultUtil.fail(exception_image_code_check);
+        }
     }
 
 }

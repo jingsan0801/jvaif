@@ -19,7 +19,7 @@ import static com.jsan.jvaif.inf.constant.ResultEnum.exception_token_required;
 
 /**
  * @description: 登录校验
- * 在filter之后触发
+ * 在jwt filter之后触发
  * @author: jcwang
  * @create: 2019-07-30 20:38
  **/

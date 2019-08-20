@@ -1,6 +1,7 @@
 package com.jsan.jvaif.common.util;
 
 import java.util.Random;
+import java.util.UUID;
 
 /**
  * @description:
@@ -47,5 +48,15 @@ public class MathUtil {
             }
         }
         return pwd.toString();
+    }
+
+    /**
+     * 生成uuid字符串
+     *
+     * @return uuid字符串
+     */
+    public static String getUUID() {
+        String uuid = UUID.randomUUID().toString();
+        return uuid.replaceAll("-", "");
     }
 }
