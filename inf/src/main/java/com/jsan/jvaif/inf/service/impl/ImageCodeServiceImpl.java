@@ -41,7 +41,7 @@ public class ImageCodeServiceImpl implements IImageCodeService {
      */
     @Override
     public ImageCodeDto generate() {
-        String redisKey = MathUtil.getUUID();
+        String redisKey = MathUtil.getUuid();
         ByteArrayOutputStream jpegOutputStream = new ByteArrayOutputStream();
         try {
             // 生产验证码字符串并保存到session中

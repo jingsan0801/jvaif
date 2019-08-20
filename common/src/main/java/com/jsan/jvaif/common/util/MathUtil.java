@@ -55,7 +55,7 @@ public class MathUtil {
      *
      * @return uuid字符串
      */
-    public static String getUUID() {
+    public static String getUuid() {
         String uuid = UUID.randomUUID().toString();
         return uuid.replaceAll("-", "");
     }
