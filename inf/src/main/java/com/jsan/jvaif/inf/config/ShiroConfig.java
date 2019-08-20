@@ -90,14 +90,6 @@ public class ShiroConfig {
             }
         }
 
-
-        // 指定url不过滤
-        if(shiroAnnoUrls != null) {
-            for (String url : shiroAnnoUrls) {
-                filterChainDefinitionMap.put(url, "anon");
-            }
-        }
-
         filterChainDefinitionMap.put("/logout","logout");
         filterChainDefinitionMap.put("/**", "jwt");
 
