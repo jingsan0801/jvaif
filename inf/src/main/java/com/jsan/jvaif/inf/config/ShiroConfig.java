@@ -30,10 +30,6 @@ import java.util.Map;
 @Configuration
 @PropertySource("classpath:config/pathConfig.properties")
 public class ShiroConfig {
-
-    @Value("#{'${shiro.filter_anno.urls}'.split(',')}")
-    private List<String> shiroAnnoUrls;
-
     @Value("#{'${static.urls}'.split(',')}")
     private List<String> staticUrls;
 
@@ -44,6 +40,8 @@ public class ShiroConfig {
     public ShiroRealm shiroRealm() {
         return new ShiroRealm();
     }
+
+
 
     @Bean
     public SecurityManager securityManager() {
