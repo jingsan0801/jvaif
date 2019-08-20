@@ -8,7 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.Date;
 
-import static com.jsan.jvaif.inf.constant.PublicConstant.TOKEN_EXPIRE_TIME;
+import static com.jsan.jvaif.inf.constant.PublicConstant.TOKEN_EXPIRE_HOURS;
 
 /**
  * @description: jwt工具类
@@ -68,7 +68,7 @@ public class JwtUtil {
      */
     public static String sign(String userName, String secret) {
         try {
-            Date expiresDate = new Date(System.currentTimeMillis() + TOKEN_EXPIRE_TIME);
+            Date expiresDate = new Date(System.currentTimeMillis() + TOKEN_EXPIRE_HOURS  * 60 * 60 * 1000);
             Algorithm algorithm = Algorithm.HMAC256(secret);
             return JWT.create().withClaim(CLAIM, userName).withExpiresAt(expiresDate).sign(algorithm);
         } catch (Exception e) {

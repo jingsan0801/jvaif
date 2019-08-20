@@ -18,7 +18,7 @@ public interface PublicConstant {
     /**
      * jwt token过期时间, 单位毫秒;默认12小时
      */
-    long TOKEN_EXPIRE_TIME = 12 * 60 * 60 * 1000;
+    long TOKEN_EXPIRE_HOURS = 12;
 
     /**
      * 图形验证码过期时间

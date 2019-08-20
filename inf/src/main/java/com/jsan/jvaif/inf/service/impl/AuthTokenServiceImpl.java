@@ -9,7 +9,7 @@ import org.springframework.util.StringUtils;
 import javax.annotation.Resource;
 
 import static com.jsan.jvaif.inf.constant.PublicConstant.REDIS_KEY_TOKEN;
-import static com.jsan.jvaif.inf.constant.PublicConstant.TOKEN_EXPIRE_TIME;
+import static com.jsan.jvaif.inf.constant.PublicConstant.TOKEN_EXPIRE_HOURS;
 
 /**
  * @description: 登录token service实现类
@@ -34,7 +34,7 @@ public class AuthTokenServiceImpl implements ITokenService {
         String userName = keys[0];
         String password = keys[1];
         String authToken = JwtUtil.sign(userName, password);
-        redisService.set(REDIS_KEY_TOKEN + userName, authToken, TOKEN_EXPIRE_TIME / 1000);
+        redisService.set(REDIS_KEY_TOKEN + userName, authToken, TOKEN_EXPIRE_HOURS  * 60 * 60);
         return authToken;
     }
 
