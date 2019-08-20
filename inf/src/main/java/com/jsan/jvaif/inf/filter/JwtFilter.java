@@ -20,6 +20,9 @@ import java.io.IOException;
 
 /**
  * @description: 通过jwt方式实现的token验证filter, 在interceptor之前触发
+ *
+ * 没有带token的情况下,jwtFilter会验证通过. 由后面的interceptor(LoginInterceptor)处理
+ *
  * 这里发生的异常,ExceptionHandler是捕获不到的, 所以身份验证不通过时
  * 通过response401() 跳转到controller, 由exceptionController统一接管
  * @author: jcwang
