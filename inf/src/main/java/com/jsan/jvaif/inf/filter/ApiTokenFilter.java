@@ -5,7 +5,7 @@ import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.jsan.jvaif.common.util.CommonUtil;
 import com.jsan.jvaif.inf.constant.PublicConstant;
 import com.jsan.jvaif.inf.constant.ResultEnum;
-import com.jsan.jvaif.inf.domain.JwtToken;
+import com.jsan.jvaif.inf.domain.ApiToken;
 import com.jsan.jvaif.inf.util.ResultUtil;
 import com.jsan.jvaif.inf.vo.Result;
 import org.apache.shiro.authc.AuthenticationException;
@@ -21,14 +21,14 @@ import java.io.IOException;
 /**
  * @description: 通过jwt方式实现的token验证filter, 在interceptor之前触发
  *
- * 没有带token的情况下,jwtFilter会验证通过. 由后面的interceptor(LoginInterceptor)处理
+ * 没有带token的情况下,ApiTokenFilter会验证通过. 由后面的interceptor(LoginInterceptor)处理
  *
  * 这里发生的异常,ExceptionHandler是捕获不到的, 所以身份验证不通过时
  * 通过response401() 跳转到controller, 由exceptionController统一接管
  * @author: jcwang
  * @create: 2019-08-12 10:40
  **/
-public class JwtFilter extends BasicHttpAuthenticationFilter {
+public class ApiTokenFilter extends BasicHttpAuthenticationFilter {
     /**
      * 检测Header里Authorization字段
      * 是否登录尝试
@@ -51,9 +51,9 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
     @Override
     protected boolean executeLogin(ServletRequest request, ServletResponse response) throws Exception {
         String authToken = ((HttpServletRequest)request).getHeader(PublicConstant.REQUEST_AUTH_HEADER);
-        JwtToken jwtToken = new JwtToken(authToken);
+        ApiToken apiToken = new ApiToken(authToken);
         // 给shiro的realm进行login
-        getSubject(request, response).login(jwtToken);
+        getSubject(request, response).login(apiToken);
         return true;
     }
 

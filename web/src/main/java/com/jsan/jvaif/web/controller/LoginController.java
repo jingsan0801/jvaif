@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.constraints.AssertFalse;
+import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.NotBlank;
 
 import static com.jsan.jvaif.inf.constant.ResultEnum.*;
@@ -33,18 +35,44 @@ public class LoginController {
     @Resource
     private IImageCodeService iImageCodeService;
 
-    @ApiOperation("登录")
+    @ApiOperation("api登录")
     @ApiImplicitParams({
         @ApiImplicitParam(name = "userName", value = "用户名", required = true, defaultValue = "wangjc0801"),
         @ApiImplicitParam(name = "password", value = "密码", required = true, defaultValue = "wangjc0801")})
     @ApiResponses({@ApiResponse(code = 903, message = "身份验证失败")})
-    @PostMapping(value = "/login")
+    @PostMapping(value = "/api/login")
     @SkipAuthToken
     public Result login(
         @RequestParam(name = "userName")
         @NotBlank(message = "用户名不能为空") String userName,
         @RequestParam(name = "password")
         @NotBlank(message = "密码不能为空") String password) {
+        String authToken = scyUserService.login(userName, password);
+        if (StringUtils.isEmpty(authToken)) {
+            return ResultUtil.fail(exception_login);
+        }
+        return ResultUtil.success(success_login, authToken);
+    }
+
+    @ApiOperation("登录")
+    @ApiImplicitParams({
+        @ApiImplicitParam(name = "userName", value = "用户名", required = true, defaultValue = "wangjc0801"),
+        @ApiImplicitParam(name = "password", value = "密码", required = true, defaultValue = "wangjc0801"),
+        @ApiImplicitParam(name = "rememberMe", value = "是否使用记住我", required = false),
+        @ApiImplicitParam(name = "imageCode", value = "图形验证码", required = true)
+    })
+    @ApiResponses({@ApiResponse(code = 903, message = "身份验证失败")})
+    @PostMapping(value = "/login")
+    @SkipAuthToken
+    public Result loginFromPage(
+        @RequestParam(name = "userName")
+        @NotBlank(message = "用户名不能为空") String userName,
+        @RequestParam(name = "password")
+        @NotBlank(message = "密码不能为空") String password,
+        @RequestParam(name = "rememberMe")
+        @AssertFalse @AssertTrue boolean rememberMe,
+        @RequestParam(name = "imageCode")
+        @NotBlank(message = "图形验证码不能为空") String imageCode) {
         String authToken = scyUserService.login(userName, password);
         if (StringUtils.isEmpty(authToken)) {
             return ResultUtil.fail(exception_login);

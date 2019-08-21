@@ -8,7 +8,7 @@ import com.jsan.jvaif.inf.constant.ResultEnum;
 import com.jsan.jvaif.inf.domain.ScyAuth;
 import com.jsan.jvaif.inf.domain.ScyRole;
 import com.jsan.jvaif.inf.domain.ScyUser;
-import com.jsan.jvaif.inf.domain.shiro.ShiroRealm;
+import com.jsan.jvaif.inf.domain.shiro.ApiRealm;
 import com.jsan.jvaif.inf.exption.BusinessException;
 import com.jsan.jvaif.inf.mapper.ScyUserMapper;
 import com.jsan.jvaif.inf.service.IScyUserService;
@@ -226,7 +226,7 @@ public class ScyUserServiceImpl extends ServiceImpl<ScyUserMapper, ScyUser> impl
     @Override
     public void logout() {
         RealmSecurityManager realmSecurityManager = (RealmSecurityManager)SecurityUtils.getSecurityManager();
-        ShiroRealm realm = (ShiroRealm)realmSecurityManager.getRealms().iterator().next();
+        ApiRealm realm = (ApiRealm)realmSecurityManager.getRealms().iterator().next();
         // 退出登录时清空缓存中的权限, 避免修改权限后不能立即生效
         realm.clearCachedAuthorizationInfo(SecurityUtils.getSubject().getPrincipals());
     }

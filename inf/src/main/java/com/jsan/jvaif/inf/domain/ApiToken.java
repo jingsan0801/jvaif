@@ -4,15 +4,16 @@ import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.realm.AuthorizingRealm;
 
 /**
+ * jwt用的token类, api接口使用
  * @description:
  * @author: jcwang
  * @create: 2019-08-12 10:48
  **/
-public class JwtToken implements AuthenticationToken {
+public class ApiToken implements AuthenticationToken {
 
     private String authToken;
 
-    public JwtToken(String authToken) {
+    public ApiToken(String authToken) {
         this.authToken = authToken;
     }
 

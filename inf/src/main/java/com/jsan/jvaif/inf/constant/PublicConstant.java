@@ -16,9 +16,24 @@ public interface PublicConstant {
     String REQUEST_AUTH_HEADER = "auth_token";
 
     /**
-     * jwt token过期时间, 单位毫秒;默认12小时
+     * jwt token过期时间, 单位小时
      */
     long TOKEN_EXPIRE_HOURS = 12;
+
+    /**
+     * shiro remember me功能, 生成cookie的有效期, 单位: 天
+     */
+    int REMEMBER_ME_COOKIE_EXPIRE_DAY = 30;
+
+    /**
+     * shiro remember me功能, 生成cookie的名称
+     */
+    String REMEMBER_ME_COOKIE_NAME = "rememberMe";
+
+    /**
+     * shiro remember me功能, 生成cookie的加密密钥, 要求16位
+     */
+    String REMEMBER_ME_COOKIE_KEY = "doYouRememberMe!";
 
     /**
      * 图形验证码过期时间

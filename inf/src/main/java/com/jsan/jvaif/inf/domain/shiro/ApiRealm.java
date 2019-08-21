@@ -1,6 +1,6 @@
 package com.jsan.jvaif.inf.domain.shiro;
 
-import com.jsan.jvaif.inf.domain.JwtToken;
+import com.jsan.jvaif.inf.domain.ApiToken;
 import com.jsan.jvaif.inf.domain.ScyAuth;
 import com.jsan.jvaif.inf.domain.ScyRole;
 import com.jsan.jvaif.inf.exption.BusinessException;
@@ -29,7 +29,7 @@ import static com.jsan.jvaif.inf.constant.ResultEnum.exception_token_required;
  * @create: 2019-08-03 00:50
  **/
 @Slf4j
-public class ShiroRealm extends AuthorizingRealm {
+public class ApiRealm extends AuthorizingRealm {
 
     @Resource
     private IScyUserService scyUserService;
@@ -40,7 +40,7 @@ public class ShiroRealm extends AuthorizingRealm {
      */
     @Override
     public boolean supports(AuthenticationToken token) {
-        return token instanceof JwtToken;
+        return token instanceof ApiToken;
     }
 
     /**
