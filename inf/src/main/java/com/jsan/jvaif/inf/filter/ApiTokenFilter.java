@@ -20,9 +20,9 @@ import java.io.IOException;
 
 /**
  * @description: 通过jwt方式实现的token验证filter, 在interceptor之前触发
- *
+ * <p>
  * 没有带token的情况下,ApiTokenFilter会验证通过. 由后面的interceptor(LoginInterceptor)处理
- *
+ * <p>
  * 这里发生的异常,ExceptionHandler是捕获不到的, 所以身份验证不通过时
  * 通过response401() 跳转到controller, 由exceptionController统一接管
  * @author: jcwang
@@ -75,9 +75,9 @@ public class ApiTokenFilter extends BasicHttpAuthenticationFilter {
             } catch (Exception e) {
                 rs = false;
                 if ((e instanceof SignatureVerificationException) || (e instanceof AuthenticationException)) {
-                    response401(request, response, ResultUtil.fail(ResultEnum.exception_token_illegal));
+                    response401(request, response, ResultUtil.fail(ResultEnum.exception_token_illegal, e.getMessage()));
                 } else if (e instanceof TokenExpiredException) {
-                    response401(request, response, ResultUtil.fail(ResultEnum.exception_token_expired));
+                    response401(request, response, ResultUtil.fail(ResultEnum.exception_token_expired, e.getMessage()));
                 } else {
                     response401(request, response,
                         ResultUtil.fail(ResultEnum.exception_common, CommonUtil.getStackTraceInfoOfException(e)));

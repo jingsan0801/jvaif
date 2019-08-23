@@ -1,10 +1,9 @@
 package com.jsan.jvaif.inf.domain.shiro;
 
 import com.jsan.jvaif.inf.domain.ApiToken;
-import com.jsan.jvaif.inf.domain.ScyAuth;
-import com.jsan.jvaif.inf.domain.ScyRole;
 import com.jsan.jvaif.inf.exption.BusinessException;
 import com.jsan.jvaif.inf.service.IScyUserService;
+import com.jsan.jvaif.inf.service.IShiroRealmService;
 import com.jsan.jvaif.inf.util.JwtUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authc.AuthenticationException;
@@ -12,14 +11,11 @@ import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.SimpleAuthenticationInfo;
 import org.apache.shiro.authz.AuthorizationInfo;
-import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import static com.jsan.jvaif.inf.constant.ResultEnum.exception_token_required;
 
@@ -30,6 +26,9 @@ import static com.jsan.jvaif.inf.constant.ResultEnum.exception_token_required;
  **/
 @Slf4j
 public class ApiRealm extends AuthorizingRealm {
+
+    @Resource
+    private IShiroRealmService shiroRealmService;
 
     @Resource
     private IScyUserService scyUserService;
@@ -60,18 +59,7 @@ public class ApiRealm extends AuthorizingRealm {
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
         String authToken = (String)principalCollection.getPrimaryPrincipal();
         String userName = JwtUtil.getClaim(authToken);
-        SimpleAuthorizationInfo simpleAuthorizationInfo = new SimpleAuthorizationInfo();
-
-        Set<String> roleCodeSet = scyUserService.getRoleSetByUserName(userName).stream().map(ScyRole::getRoleCode)
-            .collect(Collectors.toSet());
-        Set<String> authExpSet =
-            scyUserService.getAuthSetByUserName(userName).stream().map(ScyAuth::getAuthExp).collect(Collectors.toSet());
-        simpleAuthorizationInfo.setRoles(roleCodeSet);
-        simpleAuthorizationInfo.setStringPermissions(authExpSet);
-
-        log.info("from doGetAuthorizationInfo: {}, {}, {}", userName, roleCodeSet, authExpSet);
-
-        return simpleAuthorizationInfo;
+        return shiroRealmService.getAuthorizationInfo(userName);
     }
 
     /**
@@ -96,22 +84,9 @@ public class ApiRealm extends AuthorizingRealm {
     }
 
     /**
-     * Clears out the AuthorizationInfo cache entry for the specified account.
-     * <p/>
-     * This method is provided as a convenience to subclasses so they can invalidate a cache entry when they
-     * change an account's authorization data (add/remove roles or permissions) during runtime.  Because an account's
-     * AuthorizationInfo can be cached, there needs to be a way to invalidate the cache for only that account so that
-     * subsequent authorization operations don't used the (old) cached value if account data changes.
-     * <p/>
-     * After this method is called, the next authorization check for that same account will result in a call to
-     * {@link #getAuthorizationInfo(PrincipalCollection) getAuthorizationInfo}, and the
-     * resulting return value will be cached before being returned so it can be reused for later authorization checks.
-     * <p/>
-     * If you wish to clear out all associated cached data (and not just authorization data), use the
-     * {@link #clearCache(PrincipalCollection)} method instead (which will in turn call this
-     * method by default).
+     * 清空缓存的权限数据
      *
-     * @param principals the principals of the account for which to clear the cached AuthorizationInfo.
+     * @param principals
      */
     @Override
     public void clearCachedAuthorizationInfo(PrincipalCollection principals) {
