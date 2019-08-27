@@ -8,6 +8,9 @@ import com.jsan.jvaif.inf.util.ResultUtil;
 import com.jsan.jvaif.inf.vo.Result;
 import com.jsan.jvaif.web.annotation.SkipAuthToken;
 import io.swagger.annotations.*;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.subject.Subject;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -59,10 +62,9 @@ public class LoginController {
         @ApiImplicitParam(name = "userName", value = "用户名", required = true, defaultValue = "wangjc0801"),
         @ApiImplicitParam(name = "password", value = "密码", required = true, defaultValue = "wangjc0801"),
         @ApiImplicitParam(name = "rememberMe", value = "是否使用记住我", required = false),
-        @ApiImplicitParam(name = "imageCode", value = "图形验证码", required = true)
-    })
+        @ApiImplicitParam(name = "imageCode", value = "图形验证码", required = true)})
     @ApiResponses({@ApiResponse(code = 903, message = "身份验证失败")})
-    @PostMapping(value = "/login")
+    @PostMapping(value = "/sys/login")
     @SkipAuthToken
     public Result loginFromPage(
         @RequestParam(name = "userName")
@@ -72,12 +74,20 @@ public class LoginController {
         @RequestParam(name = "rememberMe")
         @AssertFalse @AssertTrue boolean rememberMe,
         @RequestParam(name = "imageCode")
-        @NotBlank(message = "图形验证码不能为空") String imageCode) {
-        String authToken = scyUserService.login(userName, password);
-        if (StringUtils.isEmpty(authToken)) {
-            return ResultUtil.fail(exception_login);
+        @NotBlank(message = "图形验证码不能为空") String imageCode,
+        @RequestParam(name = "uuid")
+        @NotBlank(message = "图形验证码uuid不能为空") String uuid) {
+        if (!iImageCodeService.check(imageCode, uuid)) {
+            return ResultUtil.fail(exception_image_code_check);
         }
-        return ResultUtil.success(success_login, authToken);
+        Subject subject = SecurityUtils.getSubject();
+        UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(userName, password);
+        try {
+            subject.login(usernamePasswordToken);
+        } catch (Exception e) {
+            throw e;
+        }
+        return ResultUtil.success(success_login, usernamePasswordToken);
     }
 
     @ApiOperation("退出提示")
@@ -130,9 +140,9 @@ public class LoginController {
     @SkipAuthToken
     public Result checkImageCode(
         @RequestParam(name = "code")
-        @NotBlank(message = "验证码不能为空") String code,
+        @NotBlank(message = "图形验证码不能为空") String code,
         @RequestParam(name = "uuid")
-        @NotBlank(message = "uuid不能为空") String uuid) {
+        @NotBlank(message = "图形验证码uuid不能为空") String uuid) {
         boolean isOk = iImageCodeService.check(code, uuid);
         if (isOk) {
             return ResultUtil.success(success_image_code_check, true);
