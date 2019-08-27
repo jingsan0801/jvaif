@@ -37,9 +37,6 @@ controller不应该保护业务逻辑, 而应该只包含展示逻辑.
 工具层, 暂时只包括自动代码生成的逻辑, 可独立运行, 与其他层没有关系
 
 ### todo:
-1. 多种验证方式共存
-    1. token 
-    2. username/password
 2. role/auth/menu管理
 3. 忘记密码
 4. shiro的记住我

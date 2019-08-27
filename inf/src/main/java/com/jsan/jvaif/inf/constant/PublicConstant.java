@@ -51,4 +51,9 @@ public interface PublicConstant {
      * REDIS_KEY_IMAGE_CODE + 随机数: 存放图形验证码内容, 做校验用
      */
     String REDIS_KEY_IMAGE_CODE = "image_code_";
+
+    /**
+     * 以这结尾的参数名不进行xss过滤
+     */
+    String PARAM_NAME_NO_XSS_TAIL = "WithHtml";
 }
