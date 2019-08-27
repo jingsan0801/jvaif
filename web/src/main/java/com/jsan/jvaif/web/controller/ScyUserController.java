@@ -11,6 +11,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotBlank;
 
 /**
@@ -35,8 +36,8 @@ public class ScyUserController {
      * @return ScyUser
      */
     @SkipAuthToken
-    @RequestMapping(value = "/{ScyUserId}", method = RequestMethod.GET)
-    public Result getScyUserById(
+    @GetMapping(value = "/{ScyUserId}/**")
+    public Result getScyUserById(HttpServletRequest request,
         @PathVariable("ScyUserId")
             String userId) {
         ScyUser scyUser = scyUserService.getById(userId);
