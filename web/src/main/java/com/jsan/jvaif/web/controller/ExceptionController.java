@@ -12,6 +12,10 @@ import com.jsan.jvaif.inf.exption.BusinessException;
 import com.jsan.jvaif.inf.util.ResultUtil;
 import com.jsan.jvaif.inf.vo.Result;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.IncorrectCredentialsException;
+import org.apache.shiro.authc.LockedAccountException;
+import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authz.UnauthorizedException;
 import org.mybatis.spring.MyBatisSystemException;
 import org.springframework.http.HttpStatus;
@@ -19,7 +23,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import javax.naming.AuthenticationException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
@@ -58,9 +61,10 @@ public class ExceptionController {
     /**
      * 身份认证异常
      */
-    @ExceptionHandler(AuthenticationException.class)
+    @ExceptionHandler({AuthenticationException.class, UnknownAccountException.class,
+        IncorrectCredentialsException.class, LockedAccountException.class})
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    public Result handleAuthenticationException(HttpServletRequest request, AuthenticationException ex) {
+    public Result handleAuthenticationException(HttpServletRequest request, Exception ex) {
         log.info(CommonUtil.getStackTraceInfoOfException(ex));
         return ResultUtil.fail(ResultEnum.exception_token_check_fail, ex.getMessage());
 
