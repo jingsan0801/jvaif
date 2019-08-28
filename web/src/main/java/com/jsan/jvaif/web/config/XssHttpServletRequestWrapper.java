@@ -115,6 +115,8 @@ public class XssHttpServletRequestWrapper extends HttpServletRequestWrapper {
     }
 
     private String clean(String content) {
+        // 对参数值的前后空格做处理
+        content = content.trim();
         return Jsoup.clean(content,"", WHITELIST, OUTPUT_SETTINGS);
     }
 
