@@ -28,6 +28,7 @@ import static com.jsan.jvaif.inf.constant.ResultEnum.*;
  * @author: jcwang
  * @create: 2019-08-03 21:27
  **/
+@CrossOrigin
 @RestController
 @Api("登录及身份验证相关")
 @ApiModel(value = "Result", description = "通用返回对象")
@@ -72,8 +73,6 @@ public class LoginController {
         @NotBlank(message = "用户名不能为空") String userName,
         @RequestParam(name = "password")
         @NotBlank(message = "密码不能为空") String password,
-        @RequestParam(name = "rememberMe")
-        @AssertFalse @AssertTrue boolean rememberMe,
         @RequestParam(name = "imageCode")
         @NotBlank(message = "图形验证码不能为空") String imageCode,
         @RequestParam(name = "uuid")

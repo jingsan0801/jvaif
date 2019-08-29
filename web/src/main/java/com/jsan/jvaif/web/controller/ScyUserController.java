@@ -20,6 +20,7 @@ import javax.validation.constraints.NotBlank;
  * @create: 2019-08-01 21:12
  **/
 
+@CrossOrigin
 @RestController
 @RequestMapping("/scy/user")
 @Slf4j

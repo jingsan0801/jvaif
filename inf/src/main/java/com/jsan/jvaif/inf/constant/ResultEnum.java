@@ -12,12 +12,13 @@ public enum ResultEnum {
 
     /**
      * 成功
+     * code统一为1, 这样前台判断为1的都是成功, 更好判断是否成功
      */
-    success_login("10000", "登录成功", true),
+    success_login("1", "登录成功", true),
 
-    success_logout("10002", "退出成功", true),
+    success_logout("1", "退出成功", true),
 
-    success_image_code_check("10003", "图形验证码校验通过", true),
+    success_image_code_check("1", "图形验证码校验通过", true),
 
     /**
      * 系统级异常 90xx
