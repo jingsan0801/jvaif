@@ -8,22 +8,37 @@ import com.baomidou.mybatisplus.generator.config.*;
 import com.baomidou.mybatisplus.generator.config.po.TableInfo;
 import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
 import com.baomidou.mybatisplus.generator.engine.VelocityTemplateEngine;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 自动生成代码
  *
  * @author jcwang
  */
+@Slf4j
 public class CodeGenerator {
 
     private static String strategy_tablePrefix = "t_";
     private static String strategy_tableName = "t_scy_resource";
-    private static String pc_moduleName = "inf";
-    private static String gc_projectPath = "/Users/jcwang/01-code/jvaif/inf";
+//    private static String pc_moduleName = "inf";
+//    private static String gc_projectPath = "/Users/jcwang/01-code/jvaif/inf";
+//    private static String pc_moduleName_controller = "web";
+//private static String gc_projectPath_controller = "/Users/jcwang/01-code/jvaif/web/src/main/java/com/jsan/jvaif/web/controller/";
 
+    private static String pc_moduleName = "tool";
+    private static String gc_projectPath = "/Users/jcwang/01-code/jvaif/tool";
+    private static String gc_projectPath_controller = "/Users/jcwang/01-code/jvaif/web/src/main/java/com/jsan/jvaif/web/controller/";
+    private static String pg_controller = "com.jsan.jvaif.web.controller";
+
+    /**
+     * 是否需要跨域//是否需要在controller中增加@CrossOrigin注解
+     */
+    private static boolean needCrossOrigin = true;
     private static String pc_parent = "com.jsan.jvaif";
     private static String gc_author = "wangjc";
     private static String dsc_url =
@@ -34,7 +49,8 @@ public class CodeGenerator {
     private static String strategy_superEntityClass = null;
     private static boolean strategy_lombokMode = true;
     private static boolean strategy_restControllerStyle = true;
-    private static String strategy_superControllerClass = "";
+    private static boolean controllerMappingHyphenStyle = true;
+    private static String strategy_superControllerClass = "com.jsan.jvaif.web.controller.AbstractController";
 
     public static void main(String[] args) {
         // 代码生成器
@@ -54,6 +70,8 @@ public class CodeGenerator {
         mpg.setTemplateEngine(new VelocityTemplateEngine());
 
         mpg.execute();
+
+        log.info("自定义字段: needCrossOrigin = {}",mpg.getCfg().getMap().get("needCrossOrigin"));
     }
 
     /**
@@ -104,6 +122,7 @@ public class CodeGenerator {
         strategy.setSuperEntityClass(strategy_superEntityClass);
         strategy.setEntityLombokModel(strategy_lombokMode);
         strategy.setRestControllerStyle(strategy_restControllerStyle);
+        strategy.setRestControllerStyle(controllerMappingHyphenStyle);
         // 公共父类
         strategy.setSuperControllerClass(strategy_superControllerClass);
         // 写于父类中的公共字段
@@ -139,7 +158,11 @@ public class CodeGenerator {
         InjectionConfig cfg = new InjectionConfig() {
             @Override
             public void initMap() {
-                // to do nothing
+                Map<String, Object> map = new HashMap<String, Object>(16);
+                //设置自定义字段, 通过mpg.getCfg().getMap().get("xxx")获取值, 在模板文件中通过cfg.xxx获取
+                map.put("needCrossOrigin" , needCrossOrigin);
+                map.put("pg_controller",pg_controller);
+                this.setMap(map);
             }
         };
 
@@ -147,7 +170,7 @@ public class CodeGenerator {
         //String templatePath = "/templates/mapper.xml.ftl";
         // 如果模板引擎是 velocity
         String mapperXmlTemplate = "/templates/mapper.xml.vm";
-        String controllerTemplate = "/templates/controller.java.vm";
+        String controllerTemplate = "/template/controller.java.vm";
 
         // 自定义输出配置
         List<FileOutConfig> focList = new ArrayList<>();
@@ -157,7 +180,7 @@ public class CodeGenerator {
             @Override
             public String outputFile(TableInfo tableInfo) {
                 // 自定义输出文件名 ， 如果你 Entity 设置了前后缀、此处注意 xml 的名称会跟着发生变化！！
-                return "/Users/jcwang/01-code/jvaif/web/src/main/java/com/jsan/jvaif/web/controller/" + tableInfo
+                return gc_projectPath_controller + tableInfo
                     .getEntityName() + "Controller" + StringPool.DOT_JAVA;
             }
         });
