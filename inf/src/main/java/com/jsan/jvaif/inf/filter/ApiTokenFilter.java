@@ -10,6 +10,7 @@ import com.jsan.jvaif.inf.util.ResultUtil;
 import com.jsan.jvaif.inf.vo.Result;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.web.filter.authc.BasicHttpAuthenticationFilter;
+import org.springframework.util.StringUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
@@ -37,7 +38,7 @@ public class ApiTokenFilter extends BasicHttpAuthenticationFilter {
     protected boolean isLoginAttempt(ServletRequest request, ServletResponse response) {
         HttpServletRequest req = (HttpServletRequest)request;
         String authToken = req.getHeader(PublicConstant.REQUEST_AUTH_HEADER);
-        return authToken != null;
+        return !StringUtils.isEmpty(authToken);
     }
 
     /**
