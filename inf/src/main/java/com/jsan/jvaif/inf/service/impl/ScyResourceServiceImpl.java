@@ -48,17 +48,14 @@ public class ScyResourceServiceImpl extends ServiceImpl<ScyResourceMapper, ScyRe
      * @param scyResourceDTO 父级对象
      */
     private void initSubsByResPathAndParentId(ScyResourceDTO scyResourceDTO) {
-
         List<ScyResourceDTO> subs =
             scyResourceMapper.getSubsByResPathAndParentId(scyResourceDTO.getResPath(), scyResourceDTO.getId());
-        if (subs != null && subs.size() > 0) {
-            for (ScyResourceDTO sub : subs) {
-                if (!DicItemEnum.yes.getKey().equals(sub.getIsLeaf())) {
-                    initSubsByResPathAndParentId(sub);
-                }
+        for (ScyResourceDTO sub : subs) {
+            if (!DicItemEnum.yes.getKey().equals(sub.getIsLeaf())) {
+                initSubsByResPathAndParentId(sub);
             }
-            scyResourceDTO.setSub(subs);
         }
-
+        scyResourceDTO.setList(subs);
     }
+
 }

@@ -1,8 +1,11 @@
 package com.jsan.jvaif.inf.dto;
 
 import com.jsan.jvaif.inf.domain.ScyResource;
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -14,6 +17,12 @@ import java.util.List;
 @Data
 @ToString(callSuper = true)
 public class ScyResourceDTO extends ScyResource {
-    private List<ScyResourceDTO> sub;
+    public List<ScyResourceDTO> getList() {
+        // 为保证前台获取到数据在没有的时候为[]而不是null
+        return list == null ? new ArrayList<>() : list;
+    }
+
+    private List<ScyResourceDTO> list;
+
 
 }
