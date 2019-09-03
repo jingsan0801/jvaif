@@ -1,7 +1,7 @@
 package com.jsan.jvaif.web.controller;
 
 import com.jsan.jvaif.inf.constant.PublicConstant;
-import com.jsan.jvaif.inf.dto.ImageCodeDto;
+import com.jsan.jvaif.inf.dto.ImageCodeDTO;
 import com.jsan.jvaif.inf.service.IImageCodeService;
 import com.jsan.jvaif.inf.service.IScyUserService;
 import com.jsan.jvaif.inf.util.ResultUtil;
@@ -9,17 +9,14 @@ import com.jsan.jvaif.inf.vo.Result;
 import com.jsan.jvaif.web.annotation.HttpLog;
 import com.jsan.jvaif.web.annotation.SkipAuthToken;
 import io.swagger.annotations.*;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.UsernamePasswordToken;
-import org.apache.shiro.subject.Subject;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.constraints.AssertFalse;
-import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.NotBlank;
+import java.util.HashMap;
+import java.util.Map;
 
 import static com.jsan.jvaif.inf.constant.ResultEnum.*;
 
@@ -65,7 +62,6 @@ public class LoginController {
         @ApiImplicitParam(name = "password", value = "密码", required = true, defaultValue = "wangjc0801"),
         @ApiImplicitParam(name = "rememberMe", value = "是否使用记住我", required = false),
         @ApiImplicitParam(name = "imageCode", value = "图形验证码", required = true)})
-    @ApiResponses({@ApiResponse(code = 903, message = "身份验证失败")})
     @PostMapping(value = "/sys/login")
     @SkipAuthToken
     public Result loginFromPage(
@@ -80,14 +76,13 @@ public class LoginController {
         if (!iImageCodeService.check(imageCode, uuid)) {
             return ResultUtil.fail(exception_image_code_check);
         }
-        Subject subject = SecurityUtils.getSubject();
-        UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(userName, password);
-        try {
-            subject.login(usernamePasswordToken);
-        } catch (Exception e) {
-            throw e;
+        String authToken = scyUserService.login(userName, password);
+        Map<String, Object> rsMap = new HashMap<>(1);
+        rsMap.put(PublicConstant.REQUEST_AUTH_HEADER, authToken);
+        if (StringUtils.isEmpty(authToken)) {
+            return ResultUtil.fail(exception_login);
         }
-        return ResultUtil.success(success_login, usernamePasswordToken);
+        return ResultUtil.success(success_login, rsMap);
     }
 
     @ApiOperation("退出提示")
@@ -120,9 +115,21 @@ public class LoginController {
         @ApiImplicitParam(paramType = "header", name = PublicConstant.REQUEST_AUTH_HEADER, required = true, value = "auth_token值")})
     @GetMapping("/auth_token")
     public Result refreshToken(HttpServletRequest request) {
-        String token = request.getHeader(PublicConstant.REQUEST_AUTH_HEADER);
-        String newToken = scyUserService.refreshToken(token);
+        String authToken = request.getHeader(PublicConstant.REQUEST_AUTH_HEADER);
+        String newToken = scyUserService.refreshToken(authToken);
         return ResultUtil.success(newToken);
+    }
+
+    @ApiOperation("判断auth_token是否有效")
+    @ApiImplicitParams({
+        @ApiImplicitParam(paramType = "header", name = PublicConstant.REQUEST_AUTH_HEADER, required = true, value = "auth_token值")})
+    @GetMapping("/auth_token/status")
+    public Result checkToken(HttpServletRequest request) {
+        String authToken = request.getHeader(PublicConstant.REQUEST_AUTH_HEADER);
+        boolean isValid = scyUserService.checkToken(authToken);
+        Map<String,Object> rsMap = new HashMap<>(1);
+        rsMap.put("isValid",isValid);
+        return ResultUtil.success(rsMap);
     }
 
     @ApiOperation("生成图形验证码")
@@ -130,7 +137,7 @@ public class LoginController {
     @SkipAuthToken
     @HttpLog
     public Result genImageCode(HttpServletRequest request) {
-        ImageCodeDto imageCodeDto = iImageCodeService.generate();
+        ImageCodeDTO imageCodeDto = iImageCodeService.generate();
         return ResultUtil.success(imageCodeDto);
     }
 

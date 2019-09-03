@@ -20,11 +20,28 @@ import java.util.stream.Collectors;
 public enum DicItemEnum {
 
     /**
+     * 是/否
+     */
+    yes("yes","1","是",1),
+
+    no("no","0","否",2),
+
+    /**
+     * 资源类型
+     */
+    res_type_menu("menu","1","菜单",1),
+
+    res_type_btn("btn","2","按钮",2),
+
+    res_type_data("data","3","数据",3),
+
+
+    /**
      * 有效状态
      */
-    status_user_valid("status_user", "1", "有效", 1),
+    status_valid("status_user", "1", "有效", 1),
 
-    status_user_invalid("status_user", "0", "无效", 2),
+    status_invalid("status_user", "0", "无效", 2),
 
     /**
      * 状态

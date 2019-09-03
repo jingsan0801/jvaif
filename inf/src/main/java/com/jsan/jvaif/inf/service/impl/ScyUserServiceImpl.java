@@ -3,6 +3,7 @@ package com.jsan.jvaif.inf.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.jsan.jvaif.common.util.MathUtil;
+import com.jsan.jvaif.inf.constant.DicItemEnum;
 import com.jsan.jvaif.inf.constant.PublicConstant;
 import com.jsan.jvaif.inf.constant.ResultEnum;
 import com.jsan.jvaif.inf.domain.ScyAuth;
@@ -72,7 +73,7 @@ public class ScyUserServiceImpl extends ServiceImpl<ScyUserMapper, ScyUser> impl
         scyUser.setUserName(userName);
         //5位随机字符串作为salt
         String salt = MathUtil.getRandomString(5);
-        scyUser.setStatus(PublicConstant.COMMON_VALID);
+        scyUser.setStatus(DicItemEnum.status_valid.getKey());
         scyUser.setSalt(salt);
         scyUser.setPassword((String)shiroMd5(password, userName, salt));
         return scyUserMapper.insert(scyUser);
@@ -103,7 +104,7 @@ public class ScyUserServiceImpl extends ServiceImpl<ScyUserMapper, ScyUser> impl
      */
     @Override
     public boolean checkUserStatus(ScyUser scyUser) {
-        return scyUser.getStatus() == PublicConstant.COMMON_VALID;
+        return DicItemEnum.status_valid.getKey().equals(scyUser.getStatus());
 
     }
 
@@ -131,7 +132,7 @@ public class ScyUserServiceImpl extends ServiceImpl<ScyUserMapper, ScyUser> impl
     /**
      * @param userName 用户名
      * @param password 密码
-     * @return Result
+     * @return Result auth_token
      */
     @Override
     public String login(String userName, String password) {

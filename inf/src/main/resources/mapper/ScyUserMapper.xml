@@ -14,7 +14,7 @@
 
     <select id="getRoleSetByUsername" resultType="com.jsan.jvaif.inf.domain.ScyRole">
         <![CDATA[
-        select *
+        select t2.*
         from t_scy_user t1,
              t_scy_role t2,
              t_scy_user_role t3

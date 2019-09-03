@@ -37,7 +37,7 @@ public enum ResultEnum {
 
     exception_login("9100", "登录失败", false),
 
-    exception_token_check_fail("9101", "身份验证失败", false),
+    exception_token_check_fail("9101", "用户名或密码错误", false),
 
     exception_user_exists("9102", "该用户已存在", false),
 
@@ -66,6 +66,8 @@ public enum ResultEnum {
      * 授权异常 93xx
      */
     exception_auth_deny("9300", "没有授权", false),
+
+    exception_res_getMenu("9301","获取系统菜单失败",false),
 
     /**
      * 公共

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jsan.jvaif.inf.mapper.ScyResourceMapper">
+
+    <select id="getFirstLevelMenuByRole" resultType="com.jsan.jvaif.inf.dto.ScyResourceDTO">
+        <if test="roleSet != null">
+            select distinct t1.*
+            FROM t_scy_resource t1, t_scy_role_auth t2
+            where t1.id = t2.auth_id
+            and t2.status = 1
+            and t1.status = 1
+            and t1.res_type = '1'
+            and t1.parent_res_id = '0'
+            and t2.role_id in
+            <foreach collection="roleSet" item="role" index="idx" open="(" separator="," close=")">
+                #{role.id}
+            </foreach>
+        </if>
+    </select>
+    <select id="getSubsByResPathAndParentId" resultType="com.jsan.jvaif.inf.dto.ScyResourceDTO">
+        select * from t_scy_resource t
+         where t.res_path REGEXP concat(#{resPath},'.+')
+           and t.status = '1'
+           and t.res_type = '1'
+           and t.parent_res_id = #{parentResId}
+    </select>
+</mapper>

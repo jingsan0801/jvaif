@@ -1,6 +1,6 @@
 package com.jsan.jvaif.inf.service;
 
-import com.jsan.jvaif.inf.dto.ImageCodeDto;
+import com.jsan.jvaif.inf.dto.ImageCodeDTO;
 
 /**
  * @description: 图形验证码service
@@ -14,7 +14,7 @@ public interface IImageCodeService {
      *
      * @return ImageCodeDto
      */
-    ImageCodeDto generate();
+    ImageCodeDTO generate();
 
     /**
      * 校验图形验证码输入是否正确

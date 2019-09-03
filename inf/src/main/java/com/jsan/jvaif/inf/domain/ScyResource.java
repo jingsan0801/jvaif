@@ -1,8 +1,7 @@
-package com.jsan.jvaif.tool.domain;
+package com.jsan.jvaif.inf.domain;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
-import java.time.LocalDateTime;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.io.Serializable;
 import lombok.Data;
@@ -11,17 +10,17 @@ import lombok.experimental.Accessors;
 
 /**
  * <p>
- * 权限表 
+ * 资源表 
  * </p>
  *
  * @author wangjc
- * @since 2019-08-18
+ * @since 2019-08-30
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@TableName("t_scy_auth")
-public class ScyAuth implements Serializable {
+@TableName("t_scy_resource")
+public class ScyResource implements Serializable {
 
     private static final long serialVersionUID=1L;
 
@@ -32,29 +31,39 @@ public class ScyAuth implements Serializable {
     private String id;
 
     /**
-     * 权限名称
+     * 资源名称
      */
-    private String authName;
+    private String resName;
 
     /**
-     * 资源id
+     * 资源url
      */
-    private String resId;
+    private String resUrl;
 
     /**
      * 父级id
      */
-    private String parentId;
+    private String parentResId;
 
     /**
-     * 权限表达式
+     * 排序id
      */
-    private String authExp;
+    private Integer orderId;
 
     /**
-     * 权限简介
+     * 资源类型;1:菜单;2:按钮;3.数据
      */
-    private String authDesc;
+    private String resType;
+
+    /**
+     * 资源图片
+     */
+    private String resPic;
+
+    /**
+     * 资源描述
+     */
+    private String resDesc;
 
     /**
      * 状态
@@ -62,9 +71,19 @@ public class ScyAuth implements Serializable {
     private String status;
 
     /**
-     * 创建时间
+     * 备注
      */
-    private LocalDateTime createdTime;
+    private String note;
+
+    /**
+     * 树形路径
+     */
+    private String resPath;
+
+    /**
+     * 是否叶子节点
+     */
+    private String isLeaf;
 
 
 }

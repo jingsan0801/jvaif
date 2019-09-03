@@ -6,10 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistration;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.config.annotation.*;
 
 import java.util.List;
 
@@ -47,5 +44,12 @@ public class WebMvcConfig implements WebMvcConfigurer {
             registry.addInterceptor(getLoginInterceptor()).addPathPatterns("/**");
         interceptorRegistration.excludePathPatterns(staticUrls);
     }
+
+    /*@Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**").allowedOrigins("*")
+            .allowedMethods("GET", "HEAD", "POST","PUT", "DELETE", "OPTIONS")
+            .allowCredentials(true).maxAge(3600);
+    }*/
 
 }

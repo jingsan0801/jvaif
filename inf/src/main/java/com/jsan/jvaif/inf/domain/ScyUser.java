@@ -21,7 +21,7 @@ public class ScyUser {
     private String userName;
     private String password;
     private String salt;
-    private int status;
+    private String status;
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createdTime;
 }

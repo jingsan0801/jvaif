@@ -28,4 +28,5 @@ public class Result {
             this.success = rs.isSuccessFlag();
         }
     }
+
 }
