@@ -1,4 +1,4 @@
-package com.jsan.jvaif.inf.vo;
+package com.jsan.jvaif.inf.vo.sys;
 
 import com.jsan.jvaif.inf.constant.ResultEnum;
 import lombok.Data;

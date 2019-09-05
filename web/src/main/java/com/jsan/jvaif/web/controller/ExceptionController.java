@@ -10,7 +10,7 @@ import com.jsan.jvaif.common.util.CommonUtil;
 import com.jsan.jvaif.inf.constant.ResultEnum;
 import com.jsan.jvaif.inf.exption.BusinessException;
 import com.jsan.jvaif.inf.util.ResultUtil;
-import com.jsan.jvaif.inf.vo.Result;
+import com.jsan.jvaif.inf.vo.sys.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.IncorrectCredentialsException;

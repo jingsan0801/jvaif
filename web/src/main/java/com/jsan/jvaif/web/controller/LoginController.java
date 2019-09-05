@@ -5,7 +5,7 @@ import com.jsan.jvaif.inf.vo.ImageCodeVo;
 import com.jsan.jvaif.inf.service.IImageCodeService;
 import com.jsan.jvaif.inf.service.IScyUserService;
 import com.jsan.jvaif.inf.util.ResultUtil;
-import com.jsan.jvaif.inf.vo.Result;
+import com.jsan.jvaif.inf.vo.sys.Result;
 import com.jsan.jvaif.web.annotation.HttpLog;
 import com.jsan.jvaif.web.annotation.SkipAuthToken;
 import io.swagger.annotations.*;

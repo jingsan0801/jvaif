@@ -6,7 +6,7 @@ import com.jsan.jvaif.inf.vo.ScyResourceVo;
 import com.jsan.jvaif.inf.service.IScyResourceService;
 import com.jsan.jvaif.inf.service.IScyUserService;
 import com.jsan.jvaif.inf.util.ResultUtil;
-import com.jsan.jvaif.inf.vo.Result;
+import com.jsan.jvaif.inf.vo.sys.Result;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

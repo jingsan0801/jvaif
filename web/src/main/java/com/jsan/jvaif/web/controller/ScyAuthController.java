@@ -4,7 +4,7 @@ import com.jsan.jvaif.inf.constant.ResultEnum;
 import com.jsan.jvaif.inf.domain.ScyAuth;
 import com.jsan.jvaif.inf.service.IScyAuthService;
 import com.jsan.jvaif.inf.util.ResultUtil;
-import com.jsan.jvaif.inf.vo.Result;
+import com.jsan.jvaif.inf.vo.sys.Result;
 import com.jsan.jvaif.inf.vo.ScyAuthVo;
 import com.jsan.jvaif.web.annotation.SkipAuthToken;
 import io.swagger.annotations.*;

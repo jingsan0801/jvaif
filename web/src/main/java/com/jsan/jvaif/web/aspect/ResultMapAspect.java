@@ -1,6 +1,6 @@
 package com.jsan.jvaif.web.aspect;
 
-import com.jsan.jvaif.inf.vo.Result;
+import com.jsan.jvaif.inf.vo.sys.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;

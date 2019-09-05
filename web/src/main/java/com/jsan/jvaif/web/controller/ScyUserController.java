@@ -3,7 +3,7 @@ package com.jsan.jvaif.web.controller;
 import com.jsan.jvaif.inf.domain.ScyUser;
 import com.jsan.jvaif.inf.service.IScyUserService;
 import com.jsan.jvaif.inf.util.ResultUtil;
-import com.jsan.jvaif.inf.vo.Result;
+import com.jsan.jvaif.inf.vo.sys.Result;
 import com.jsan.jvaif.web.annotation.SkipAuthToken;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.annotation.RequiresPermissions;

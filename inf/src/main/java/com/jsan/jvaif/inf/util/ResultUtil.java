@@ -1,7 +1,7 @@
 package com.jsan.jvaif.inf.util;
 
 import com.jsan.jvaif.inf.constant.ResultEnum;
-import com.jsan.jvaif.inf.vo.Result;
+import com.jsan.jvaif.inf.vo.sys.Result;
 
 /**
  * @description: 返回Result的工具类
