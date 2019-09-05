@@ -1,9 +1,8 @@
 package com.jsan.jvaif.web.controller;
 
 import com.jsan.jvaif.inf.constant.PublicConstant;
-import com.jsan.jvaif.inf.domain.ScyResource;
 import com.jsan.jvaif.inf.domain.ScyRole;
-import com.jsan.jvaif.inf.dto.ScyResourceDTO;
+import com.jsan.jvaif.inf.vo.ScyResourceVo;
 import com.jsan.jvaif.inf.service.IScyResourceService;
 import com.jsan.jvaif.inf.service.IScyUserService;
 import com.jsan.jvaif.inf.util.ResultUtil;
@@ -44,7 +43,7 @@ public class ScyResourceController extends AbstractController {
     public Result getScyResourceByUserName(HttpServletRequest request) {
         Set<ScyRole> roles = scyUserService.getRoleSetByUserName(getUserName(request));
         if (roles != null && roles.size() > 0) {
-            List<ScyResourceDTO> resources = scyResourceService.getAllMenuByRole(roles);
+            List<ScyResourceVo> resources = scyResourceService.getAllMenuByRole(roles);
             if (resources != null && resources.size() > 0) {
                 return ResultUtil.success(resources);
             }

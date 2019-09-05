@@ -1,4 +1,4 @@
-package com.jsan.jvaif.inf.dto;
+package com.jsan.jvaif.inf.vo;
 
 import lombok.Data;
 
@@ -8,7 +8,7 @@ import lombok.Data;
  * @create: 2019-08-20 21:24
  **/
 @Data
-public class ImageCodeDTO {
+public class ImageCodeVo {
     private long expireSeconds;
     private String imageCode;
     private String uuid;

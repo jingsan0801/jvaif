@@ -52,4 +52,9 @@ public interface PublicConstant {
      * 以这结尾的参数名不进行xss过滤
      */
     String PARAM_NAME_NO_XSS_TAIL = "WithHtml";
+
+    /**
+     * 请求参数为数组时,多个元素间的分隔符
+     */
+    String REQUEST_PARAM_ARRAY_SPLIT = ",";
 }

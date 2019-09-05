@@ -3,6 +3,8 @@ package com.jsan.jvaif.inf.domain;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -16,6 +18,7 @@ import java.util.Date;
  **/
 @TableName("t_scy_auth")
 @Data
+@ApiModel(value = "ScyAuth", description = "权限实体类")
 public class ScyAuth implements Serializable, Cloneable {
     /**
      * id
@@ -46,5 +49,6 @@ public class ScyAuth implements Serializable, Cloneable {
      * 创建时间
      */
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @ApiModelProperty(value = "创建时间",example = "2019-09-04 22:30:51")
     private Date createdTime;
 }

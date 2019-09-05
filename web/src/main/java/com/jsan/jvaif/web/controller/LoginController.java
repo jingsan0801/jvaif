@@ -1,7 +1,7 @@
 package com.jsan.jvaif.web.controller;
 
 import com.jsan.jvaif.inf.constant.PublicConstant;
-import com.jsan.jvaif.inf.dto.ImageCodeDTO;
+import com.jsan.jvaif.inf.vo.ImageCodeVo;
 import com.jsan.jvaif.inf.service.IImageCodeService;
 import com.jsan.jvaif.inf.service.IScyUserService;
 import com.jsan.jvaif.inf.util.ResultUtil;
@@ -41,7 +41,6 @@ public class LoginController {
     @ApiImplicitParams({
         @ApiImplicitParam(name = "userName", value = "用户名", required = true, defaultValue = "wangjc0801"),
         @ApiImplicitParam(name = "password", value = "密码", required = true, defaultValue = "wangjc0801")})
-    @ApiResponses({@ApiResponse(code = 903, message = "身份验证失败")})
     @PostMapping(value = "/api/login")
     @SkipAuthToken
     public Result login(
@@ -137,8 +136,8 @@ public class LoginController {
     @SkipAuthToken
     @HttpLog
     public Result genImageCode(HttpServletRequest request) {
-        ImageCodeDTO imageCodeDto = iImageCodeService.generate();
-        return ResultUtil.success(imageCodeDto);
+        ImageCodeVo imageCodeVo = iImageCodeService.generate();
+        return ResultUtil.success(imageCodeVo);
     }
 
     @ApiOperation("校验图形验证码")

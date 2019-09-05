@@ -11,7 +11,12 @@ import javax.servlet.http.HttpServletRequest;
  * @create: 2019-09-01 19:58
  **/
 public abstract class AbstractController {
-    public String getUserName(HttpServletRequest request) {
+    /**
+     * 从request中获取token
+     * @param request request
+     * @return token值
+     */
+    String getUserName(HttpServletRequest request) {
         String authToken = request.getHeader(PublicConstant.REQUEST_AUTH_HEADER);
         return JwtUtil.getClaim(authToken);
     }

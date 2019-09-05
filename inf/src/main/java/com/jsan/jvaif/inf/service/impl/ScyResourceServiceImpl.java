@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.jsan.jvaif.inf.constant.DicItemEnum;
 import com.jsan.jvaif.inf.domain.ScyResource;
 import com.jsan.jvaif.inf.domain.ScyRole;
-import com.jsan.jvaif.inf.dto.ScyResourceDTO;
+import com.jsan.jvaif.inf.vo.ScyResourceVo;
 import com.jsan.jvaif.inf.mapper.ScyResourceMapper;
 import com.jsan.jvaif.inf.service.IScyResourceService;
 import lombok.extern.slf4j.Slf4j;
@@ -31,13 +31,13 @@ public class ScyResourceServiceImpl extends ServiceImpl<ScyResourceMapper, ScyRe
     private ScyResourceMapper scyResourceMapper;
 
     @Override
-    public List<ScyResourceDTO> getAllMenuByRole(Set<ScyRole> roleSet) {
-        List<ScyResourceDTO> rs = new ArrayList<>();
+    public List<ScyResourceVo> getAllMenuByRole(Set<ScyRole> roleSet) {
+        List<ScyResourceVo> rs = new ArrayList<>();
         // 获取第一层菜单
-        List<ScyResourceDTO> firstLevelResDto = scyResourceMapper.getFirstLevelMenuByRole(roleSet);
-        for (ScyResourceDTO resourceDTO : firstLevelResDto) {
-            initSubsByResPathAndParentId(resourceDTO);
-            rs.add(resourceDTO);
+        List<ScyResourceVo> firstLevelResVo = scyResourceMapper.getFirstLevelMenuByRole(roleSet);
+        for (ScyResourceVo resourceVo : firstLevelResVo) {
+            initSubsByResPathAndParentId(resourceVo);
+            rs.add(resourceVo);
         }
         return rs;
     }
@@ -45,17 +45,17 @@ public class ScyResourceServiceImpl extends ServiceImpl<ScyResourceMapper, ScyRe
     /**
      * 递归获取所有的层级的子数据
      *
-     * @param scyResourceDTO 父级对象
+     * @param scyResourceVo 父级对象
      */
-    private void initSubsByResPathAndParentId(ScyResourceDTO scyResourceDTO) {
-        List<ScyResourceDTO> subs =
-            scyResourceMapper.getSubsByResPathAndParentId(scyResourceDTO.getResPath(), scyResourceDTO.getId());
-        for (ScyResourceDTO sub : subs) {
+    private void initSubsByResPathAndParentId(ScyResourceVo scyResourceVo) {
+        List<ScyResourceVo> subs =
+            scyResourceMapper.getSubsByResPathAndParentId(scyResourceVo.getResPath(), scyResourceVo.getId());
+        for (ScyResourceVo sub : subs) {
             if (!DicItemEnum.yes.getKey().equals(sub.getIsLeaf())) {
                 initSubsByResPathAndParentId(sub);
             }
         }
-        scyResourceDTO.setList(subs);
+        scyResourceVo.setList(subs);
     }
 
 }

@@ -20,6 +20,12 @@ public enum ResultEnum {
 
     success_image_code_check("1", "图形验证码校验通过", true),
 
+    success_common_add("1","创建成功",true),
+
+    success_common_del("1","删除成功",true),
+
+    success_common_update("1","修改成功",true),
+
     /**
      * 系统级异常 90xx
      */

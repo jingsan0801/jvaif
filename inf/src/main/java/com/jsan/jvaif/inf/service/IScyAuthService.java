@@ -1,5 +1,10 @@
 package com.jsan.jvaif.inf.service;
 
+import com.baomidou.mybatisplus.extension.service.IService;
+import com.jsan.jvaif.inf.domain.ScyAuth;
+import com.jsan.jvaif.inf.vo.ScyAuthVo;
+
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -7,7 +12,7 @@ import java.util.Map;
  * @author: Stone
  * @create: 2019-08-06 21:32
  **/
-public interface IScyAuthService {
+public interface IScyAuthService extends IService<ScyAuth> {
 
     /**
      * 获取url和对应的权限配置
@@ -17,4 +22,6 @@ public interface IScyAuthService {
      * @return Map<String, String>
      */
     Map<String, String> getShiroFilterChain();
+
+    List<ScyAuth> getByVo(ScyAuthVo vo);
 }

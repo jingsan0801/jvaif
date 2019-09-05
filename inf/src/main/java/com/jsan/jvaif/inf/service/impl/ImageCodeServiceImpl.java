@@ -2,7 +2,7 @@ package com.jsan.jvaif.inf.service.impl;
 
 import com.google.code.kaptcha.impl.DefaultKaptcha;
 import com.jsan.jvaif.common.util.MathUtil;
-import com.jsan.jvaif.inf.dto.ImageCodeDTO;
+import com.jsan.jvaif.inf.vo.ImageCodeVo;
 import com.jsan.jvaif.inf.exption.BusinessException;
 import com.jsan.jvaif.inf.service.IImageCodeService;
 import com.jsan.jvaif.inf.service.RedisService;
@@ -37,10 +37,10 @@ public class ImageCodeServiceImpl implements IImageCodeService {
     /**
      * 生成图形验证码
      *
-     * @return ImageCodeDto
+     * @return ImageCodeVo
      */
     @Override
-    public ImageCodeDTO generate() {
+    public ImageCodeVo generate() {
         String redisKey = MathUtil.getUuid();
         ByteArrayOutputStream jpegOutputStream = new ByteArrayOutputStream();
         try {
@@ -59,12 +59,12 @@ public class ImageCodeServiceImpl implements IImageCodeService {
         byte[] b = jpegOutputStream.toByteArray();
         String imageString = "data:image/JPEG;base64," + Base64Utils.encodeToString(b);
 
-        ImageCodeDTO imageCodeDto = new ImageCodeDTO();
-        imageCodeDto.setExpireSeconds(IMAGE_CODE_EXPIRE_SECONDS);
-        imageCodeDto.setImageCode(imageString);
-        imageCodeDto.setUuid(redisKey);
+        ImageCodeVo imageCodeVo = new ImageCodeVo();
+        imageCodeVo.setExpireSeconds(IMAGE_CODE_EXPIRE_SECONDS);
+        imageCodeVo.setImageCode(imageString);
+        imageCodeVo.setUuid(redisKey);
 
-        return imageCodeDto;
+        return imageCodeVo;
 
     }
 
