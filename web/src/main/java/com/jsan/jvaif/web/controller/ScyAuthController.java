@@ -69,7 +69,7 @@ public class ScyAuthController extends AbstractController {
         @ApiImplicitParam(name = "scyAuthId", value = "主键id", required = true, paramType = "path", dataType = "String"),
         @ApiImplicitParam(name = "cols", value = "需要返回的列,以,分割", required = false, paramType = "path", dataType = "String")
     })
-    @GetMapping(value = "/{scyAuthId}/**")
+    @GetMapping(value = "/{scyAuthId}")
     public Result getScyAuthById(HttpServletRequest request,
         @PathVariable("scyAuthId") @NotBlank
             String scyAuthId) {
@@ -79,14 +79,14 @@ public class ScyAuthController extends AbstractController {
 
     @SkipAuthToken@ApiOperation("按vo查询权限")
     @GetMapping("")
-    public Result getScyAuth(@Valid ScyAuthVo vo) {
+    public Result getScyAuth(HttpServletRequest request,@Valid ScyAuthVo vo) {
         List<ScyAuth> scyAuthList = scyAuthService.getByVo(vo);
         return ResultUtil.success(scyAuthList);
     }
 
     @SkipAuthToken@ApiOperation("按vo查询权限(分页)")
     @GetMapping("/page")
-    public PageResult getByVoForPage(@Valid ScyAuthVo vo) {
+    public PageResult getByVoForPage(HttpServletRequest request,@Valid ScyAuthVo vo) {
         IPage<ScyAuth> scyAuthPage = scyAuthService.getByVoForPage(vo);
         return PageResultUtil.success(scyAuthPage);
     }

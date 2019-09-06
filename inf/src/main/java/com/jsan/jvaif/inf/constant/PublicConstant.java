@@ -57,4 +57,9 @@ public interface PublicConstant {
      * 请求参数为数组时,多个元素间的分隔符
      */
     String REQUEST_PARAM_ARRAY_SPLIT = ",";
+
+    /**
+     * 指定需要返回的列名
+     */
+    String PARAM_REQUIRE_COL = "_cols";
 }

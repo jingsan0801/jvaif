@@ -16,7 +16,7 @@ public class PageResult {
     private String code;
     private String msg;
     private long count;
-    private List<Object> data;
+    private List data;
 
     public PageResult() {}
 

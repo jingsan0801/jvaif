@@ -99,7 +99,7 @@ public class ScyAuthControllerTest extends WebApplicationTests {
     @Test
     public void testGetScyAuthById() throws Exception {
         String url = "/scy/auth";
-        String scyAuthId = "1/id,authName";
+        String scyAuthId = "1?_cols=id,authName";
 
         MvcResult rs = mockMvc.perform(get(url + "/" + scyAuthId))
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8)).andReturn();
@@ -113,7 +113,7 @@ public class ScyAuthControllerTest extends WebApplicationTests {
     @Test
     public void testGetScyAuth() throws Exception {
         String url = "/scy/auth";
-        String params = "?id=232e85ee95f6b4a9f7610849ed936f94&authName=1";
+        String params = "?_cols=id,authName";
 
         MvcResult rs =
             mockMvc.perform(get(url + params)).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
@@ -129,7 +129,7 @@ public class ScyAuthControllerTest extends WebApplicationTests {
     @Test
     public void testGetByVoForPage() throws Exception {
         String url = "/scy/auth/page";
-        String params = "?page=3&limit=2";
+        String params = "?page=3&limit=2&_cols=id,authName";
 
         MvcResult rs =
             mockMvc.perform(get(url + params)).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
