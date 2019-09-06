@@ -1,6 +1,9 @@
 package com.jsan.jvaif.inf.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.jsan.jvaif.inf.domain.ScyAuth;
 import com.jsan.jvaif.inf.mapper.ScyAuthMapper;
@@ -42,6 +45,21 @@ public class ScyAuthServiceImpl extends ServiceImpl<ScyAuthMapper, ScyAuth> impl
 
     @Override
     public List<ScyAuth> getByVo(ScyAuthVo vo) {
+        return scyAuthMapper.selectList(genQueryWrapper(vo));
+    }
+
+    @Override
+    public IPage<ScyAuth> getByVoForPage(ScyAuthVo vo) {
+        Page<ScyAuth> page = new Page<>(vo.getPage(),vo.getLimit());
+        return scyAuthMapper.selectPage(page, genQueryWrapper(vo));
+    }
+
+    /**
+     * 分页和不分页的查询通常查询条件是一样的的
+     * @param vo 查询vo
+     * @return
+     */
+    private Wrapper<ScyAuth> genQueryWrapper(ScyAuthVo vo) {
         QueryWrapper<ScyAuth> qw = new QueryWrapper<>();
         if (!StringUtils.isEmpty(vo.getId())) {
             qw.eq("id", vo.getId());
@@ -49,6 +67,6 @@ public class ScyAuthServiceImpl extends ServiceImpl<ScyAuthMapper, ScyAuth> impl
         if (!StringUtils.isEmpty(vo.getAuthName())) {
             qw.like("auth_name", vo.getAuthName());
         }
-        return scyAuthMapper.selectList(qw);
+        return qw;
     }
 }

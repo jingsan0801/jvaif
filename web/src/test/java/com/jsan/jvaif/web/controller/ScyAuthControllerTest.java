@@ -122,6 +122,22 @@ public class ScyAuthControllerTest extends WebApplicationTests {
         log.info("testGetScyAuth() = {}", rs.getResponse().getContentAsString());
     }
 
+
+    /**
+     * Method: getByVoForPage(@Valid ScyAuthVo vo)
+     */
+    @Test
+    public void testGetByVoForPage() throws Exception {
+        String url = "/scy/auth/page";
+        String params = "?page=3&limit=2";
+
+        MvcResult rs =
+            mockMvc.perform(get(url + params)).andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                .andReturn();
+
+        log.info("testGetByVoForPage() = {}", rs.getResponse().getContentAsString());
+    }
+
     /**
      * Method: updateScyAuth(@RequestBody
      * ScyAuth scyAuth)

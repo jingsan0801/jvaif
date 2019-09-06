@@ -1,5 +1,6 @@
 package com.jsan.jvaif.inf.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.jsan.jvaif.inf.domain.ScyAuth;
 import com.jsan.jvaif.inf.vo.ScyAuthVo;
@@ -24,4 +25,6 @@ public interface IScyAuthService extends IService<ScyAuth> {
     Map<String, String> getShiroFilterChain();
 
     List<ScyAuth> getByVo(ScyAuthVo vo);
+
+    IPage<ScyAuth> getByVoForPage(ScyAuthVo vo);
 }

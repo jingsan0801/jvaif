@@ -1,9 +1,12 @@
 package com.jsan.jvaif.web.controller;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.jsan.jvaif.inf.constant.ResultEnum;
 import com.jsan.jvaif.inf.domain.ScyAuth;
 import com.jsan.jvaif.inf.service.IScyAuthService;
+import com.jsan.jvaif.inf.util.PageResultUtil;
 import com.jsan.jvaif.inf.util.ResultUtil;
+import com.jsan.jvaif.inf.vo.sys.PageResult;
 import com.jsan.jvaif.inf.vo.sys.Result;
 import com.jsan.jvaif.inf.vo.ScyAuthVo;
 import com.jsan.jvaif.web.annotation.SkipAuthToken;
@@ -75,13 +78,17 @@ public class ScyAuthController extends AbstractController {
     }
 
     @SkipAuthToken@ApiOperation("按vo查询权限")
-    @ApiImplicitParams({
-
-    })
     @GetMapping("")
     public Result getScyAuth(@Valid ScyAuthVo vo) {
         List<ScyAuth> scyAuthList = scyAuthService.getByVo(vo);
         return ResultUtil.success(scyAuthList);
+    }
+
+    @SkipAuthToken@ApiOperation("按vo查询权限(分页)")
+    @GetMapping("/page")
+    public PageResult getByVoForPage(@Valid ScyAuthVo vo) {
+        IPage<ScyAuth> scyAuthPage = scyAuthService.getByVoForPage(vo);
+        return PageResultUtil.success(scyAuthPage);
     }
 
     @SkipAuthToken
