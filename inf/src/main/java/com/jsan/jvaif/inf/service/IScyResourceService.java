@@ -18,6 +18,12 @@ import java.util.Set;
  */
 public interface IScyResourceService extends IService<ScyResource> {
 
+    /**
+     * 根据角色集合获取菜单集合
+     *
+     * @param roleSet
+     * @return
+     */
     List<ScyResourceVo> getAllMenuByRole(Set<ScyRole> roleSet);
 
 }

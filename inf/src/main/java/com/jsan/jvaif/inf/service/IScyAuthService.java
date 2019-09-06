@@ -24,7 +24,18 @@ public interface IScyAuthService extends IService<ScyAuth> {
      */
     Map<String, String> getShiroFilterChain();
 
+    /**
+     * 根据vo的字段查询(不分页)
+     *
+     * @param vo 查询vo
+     * @return
+     */
     List<ScyAuth> getByVo(ScyAuthVo vo);
 
+    /**
+     * 根据vo的字段查询(分页)
+     * @param vo 查询vo
+     * @return
+     */
     IPage<ScyAuth> getByVoForPage(ScyAuthVo vo);
 }

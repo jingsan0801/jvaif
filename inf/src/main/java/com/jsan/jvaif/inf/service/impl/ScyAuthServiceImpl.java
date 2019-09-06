@@ -39,8 +39,7 @@ public class ScyAuthServiceImpl extends ServiceImpl<ScyAuthMapper, ScyAuth> impl
      */
     @Override
     public Map<String, String> getShiroFilterChain() {
-        Map<String, String> rsMap = new HashMap<>();
-        return rsMap;
+        return new HashMap<>(16);
     }
 
     @Override

@@ -19,8 +19,20 @@ import java.util.Set;
  */
 public interface ScyResourceMapper extends BaseMapper<ScyResource> {
 
+    /**
+     * 根据角色集合获取第一层菜单
+     *
+     * @param roleSet
+     * @return
+     */
     List<ScyResourceVo> getFirstLevelMenuByRole(@Param(value = "roleSet") Set<ScyRole> roleSet);
 
+    /**
+     * 根据上层id获取子内容
+     * @param resPath
+     * @param parentResId
+     * @return
+     */
     List<ScyResourceVo> getSubsByResPathAndParentId(@Param(value = "resPath")String resPath, @Param(value = "parentResId")String parentResId);
 
 }

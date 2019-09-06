@@ -8,8 +8,9 @@ import com.jsan.jvaif.inf.domain.ScyUser;
 import java.util.Set;
 
 /**
+ * user service
  *
- **/
+ * @author jcwang*/
 public interface IScyUserService extends IService<ScyUser> {
 
     /**

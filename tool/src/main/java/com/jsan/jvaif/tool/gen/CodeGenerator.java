@@ -93,7 +93,6 @@ public class CodeGenerator {
         // 数据源配置
         DataSourceConfig dsc = new DataSourceConfig();
         dsc.setUrl(dsc_url);
-        // dsc.setSchemaName("public");
         dsc.setDriverName(dsc_driverName);
         dsc.setUsername(dsc_userName);
         dsc.setPassword(dsc_password);
@@ -126,7 +125,6 @@ public class CodeGenerator {
         // 公共父类
         strategy.setSuperControllerClass(strategy_superControllerClass);
         // 写于父类中的公共字段
-        //strategy.setSuperEntityColumns("id");
         strategy.setInclude(strategy_tableName);
         strategy.setControllerMappingHyphenStyle(true);
         strategy.setTablePrefix(strategy_tablePrefix);
@@ -193,16 +191,6 @@ public class CodeGenerator {
                     + StringPool.DOT_XML;
             }
         });
-        /*
-        cfg.setFileCreate(new IFileCreate() {
-            @Override
-            public boolean isCreate(ConfigBuilder configBuilder, FileType fileType, String filePath) {
-                // 判断自定义文件夹是否需要创建
-                checkDir("调用默认方法创建的目录");
-                return false;
-            }
-        });
-        */
         cfg.setFileOutConfigList(focList);
         return cfg;
     }
