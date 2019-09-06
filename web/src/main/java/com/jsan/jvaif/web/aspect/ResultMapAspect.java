@@ -48,7 +48,7 @@ public class ResultMapAspect {
             return returnObj;
         }
         HttpServletRequest request = (HttpServletRequest)args[0];
-        String columnStr = (String)request.getParameter(PARAM_REQUIRE_COL);
+        String columnStr = request.getParameter(PARAM_REQUIRE_COL);
         // 如果没有列名
         if (StringUtils.isEmpty(columnStr)) {
             return returnObj;
@@ -65,11 +65,11 @@ public class ResultMapAspect {
                 // 如果是多条数据
                 if (data instanceof List) {
                     List<Object> dataList = (List<Object>)data;
-                    resultVo.setData(genNewRsMap(dataList,columns));
+                    resultVo.setData(genNewRsMap(dataList, columns));
                 } else if (!(data instanceof Map) && !(data instanceof Set)) {
                     // 如果是单条数据,不是map也不是set
                     // 装新的结果map
-                    Map<String, Object> dataMap = new LinkedHashMap<String, Object>();
+                    Map<String, Object> dataMap = new LinkedHashMap<>();
                     fetchValue(columns, data, dataMap);
                     resultVo.setData(dataMap);
                 }
@@ -83,7 +83,7 @@ public class ResultMapAspect {
             // 约定data为数据key
             List<Object> data = pageResult.getData();
             if (data != null && data.size() > 0) {
-                pageResult.setData(genNewRsMap(data,columns));
+                pageResult.setData(genNewRsMap(data, columns));
             }
         }
 
@@ -91,16 +91,18 @@ public class ResultMapAspect {
         return returnObj;
     }
 
-    /** 重新组装list
-     * @param src 原来的list
+    /**
+     * 重新组装list
+     *
+     * @param src     原来的list
      * @param columns 需要的列
      * @return 经过过滤后的新的list
      */
     private List<Map<String, Object>> genNewRsMap(List<Object> src, String[] columns) {
-        List<Map<String, Object>> dataMapList = new ArrayList<Map<String, Object>>();
+        List<Map<String, Object>> dataMapList = new ArrayList<>();
         for (Object d : src) {
             // 装新的结果map
-            Map<String, Object> dataMap = new LinkedHashMap<String, Object>();
+            Map<String, Object> dataMap = new LinkedHashMap<>();
             fetchValue(columns, d, dataMap);
             dataMapList.add(dataMap);
         }
@@ -117,7 +119,7 @@ public class ResultMapAspect {
     private void fetchValue(String[] columns, Object object, Map<String, Object> dataMap) {
         for (String col : columns) {
             Field f = ReflectionUtils.findField(object.getClass(), col);
-            if(f == null) {
+            if (f == null) {
                 continue;
             }
             f.setAccessible(true);
@@ -145,6 +147,7 @@ public class ResultMapAspect {
      * @param request request
      * @return
      */
+    @SuppressWarnings("unused")
     private String extractPathFromPattern(final HttpServletRequest request) {
         String path = (String)request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
         String bestMatchPattern = (String)request.getAttribute(HandlerMapping.BEST_MATCHING_PATTERN_ATTRIBUTE);
