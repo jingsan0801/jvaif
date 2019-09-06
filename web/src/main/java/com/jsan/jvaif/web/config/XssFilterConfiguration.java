@@ -11,7 +11,7 @@ import javax.servlet.DispatcherType;
  * xss过滤拦截器
  * @author jcwang
  */
-//@Configuration
+@Configuration
 public class XssFilterConfiguration {
     /**
      * xss过滤拦截器

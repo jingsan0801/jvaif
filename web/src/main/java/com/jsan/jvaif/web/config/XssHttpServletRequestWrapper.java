@@ -33,7 +33,6 @@ public class XssHttpServletRequestWrapper extends HttpServletRequestWrapper {
      */
     private static final Document.OutputSettings OUTPUT_SETTINGS = new Document.OutputSettings().prettyPrint(false);
 
-
     public XssHttpServletRequestWrapper(HttpServletRequest request) {
         super(request);
         this.orgRequest = request;
@@ -56,19 +55,19 @@ public class XssHttpServletRequestWrapper extends HttpServletRequestWrapper {
     @Override
     public Map getParameterMap() {
         Map map = super.getParameterMap();
-        Map<String, String> returnMap = new HashMap<String, String>();
+        Map<String, String> returnMap = new HashMap<>(16);
         Iterator entries = map.entrySet().iterator();
         Map.Entry entry;
-        String name = "";
+        String name;
         String value = "";
         while (entries.hasNext()) {
-            entry = (Map.Entry) entries.next();
-            name = (String) entry.getKey();
+            entry = (Map.Entry)entries.next();
+            name = (String)entry.getKey();
             Object valueObj = entry.getValue();
             if (null == valueObj) {
                 value = "";
             } else if (valueObj instanceof String[]) {
-                String[] values = (String[]) valueObj;
+                String[] values = (String[])valueObj;
                 for (String s : values) {
                     value = s + ",";
                 }
@@ -104,30 +103,31 @@ public class XssHttpServletRequestWrapper extends HttpServletRequestWrapper {
 
     @Override
     public ServletInputStream getInputStream() throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(orgRequest.getInputStream()));
-        String line = br.readLine();
-        String result = "";
-        if (line != null) {
-            //对参数进行处理
+        StringBuilder newRs;
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(orgRequest.getInputStream()))) {
+            String line;
+            newRs = new StringBuilder();
+            while ((line = br.readLine()) != null) {
+                newRs.append(clean(line));
+            }
         }
 
-        return new WrappedServletInputStream(new ByteArrayInputStream(result.getBytes()));
+        return new WrappedServletInputStream(new ByteArrayInputStream(newRs.toString().getBytes()));
     }
 
     private String clean(String content) {
         // 对参数值的前后空格做处理
         content = content.trim();
-        return Jsoup.clean(content,"", WHITELIST, OUTPUT_SETTINGS);
+        // 避免处理掉json格式的数据
+        WHITELIST.addTags("{", "}", ":");
+        return Jsoup.clean(content, "", WHITELIST, OUTPUT_SETTINGS);
     }
 
     private static class WrappedServletInputStream extends ServletInputStream {
-        public void setStream(InputStream stream) {
-            this.stream = stream;
-        }
 
         private InputStream stream;
 
-        public WrappedServletInputStream(InputStream stream) {
+        WrappedServletInputStream(InputStream stream) {
             this.stream = stream;
         }
 
@@ -158,7 +158,7 @@ public class XssHttpServletRequestWrapper extends HttpServletRequestWrapper {
 
     public static HttpServletRequest getOrgRequest(HttpServletRequest req) {
         if (req instanceof XssHttpServletRequestWrapper) {
-            return ((XssHttpServletRequestWrapper) req).getOrgRequest();
+            return ((XssHttpServletRequestWrapper)req).getOrgRequest();
         }
 
         return req;
